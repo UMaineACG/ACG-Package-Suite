@@ -30,5 +30,7 @@ sudo apt-get -y autoremove
 sudo apt-get remove -y light-locker
 sudo apt-get remove -y gnome-screensaver
 sudo apt-get remove -y xscreensaver
+sudo echo "TZ='America/New_York'; export TZ">>/etc/profile
+
 sudo rm /var/crash/*
 
