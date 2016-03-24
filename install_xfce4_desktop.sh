@@ -31,6 +31,7 @@ sudo apt-get remove -y light-locker
 sudo apt-get remove -y gnome-screensaver
 sudo apt-get remove -y xscreensaver
 sudo echo "TZ='America/New_York'; export TZ">>/etc/profile
+sudo /usr/local/bin/ACG-Package-Suite/install_chrome_and_remote_desktop.sh
 
 sudo rm /var/crash/*
 
