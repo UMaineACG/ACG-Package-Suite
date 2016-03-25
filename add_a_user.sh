@@ -4,7 +4,8 @@
 # add a user 
 #
 # call should be of the form 
-# echo "id pass"|/usr/local/bin/ACG-Package-Suite/add_user.sh
+# printf "id\npass"|/usr/local/bin/ACG-Package-Suite/add_user.sh
+# where id is username and pass is password (with a \n between)
 #
 ###################################################################
 echo "Please enter a user name"
