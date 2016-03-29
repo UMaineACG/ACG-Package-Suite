@@ -34,7 +34,8 @@ sudo apt-get -y autoremove
 sudo apt-get remove -y light-locker
 sudo apt-get remove -y gnome-screensaver
 sudo apt-get remove -y xscreensaver
-sudo echo "TZ='America/New_York'; export TZ">>/etc/profile
+sudo echo "America/New_York" | sudo tee /etc/timezone >/dev/null
+sudo dpkg-reconfigure -f noninteractive tzdata
 sudo /usr/local/bin/ACG-Package-Suite/install_chrome_and_remote_desktop.sh
 
 sudo rm /var/crash/*
