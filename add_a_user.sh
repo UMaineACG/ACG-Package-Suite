@@ -17,5 +17,6 @@ echo "Password is $PASSWORD"
 
 sudo useradd -m -s /bin/bash $USERNAME -gsudo
 echo "$USERNAME:$PASSWORD"|sudo chpasswd
-sudo echo echo "startxfce4" >>/home/$USERNAME/.chrome-remote-desktop-session
+sudo echo "startxfce4" >>/home/$USERNAME/.chrome-remote-desktop-session
+sudo echo "export CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES=1024x768">>/home/$USERNAME/.bashrc
 
