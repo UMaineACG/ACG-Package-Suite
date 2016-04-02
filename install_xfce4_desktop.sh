@@ -36,6 +36,10 @@ sudo apt-get remove -y gnome-screensaver
 sudo apt-get remove -y xscreensaver
 sudo apt-get remove -y abiword
 sudo apt-get remove -y gnumeric
+echo "en_US.UTF-8 UTF-8" | sudo tee -a /etc/locale.gen
+sudo locale-gen
+sudo timedatectl set-timezone America/New_York
+
 #sudo echo "America/New_York" | sudo tee /etc/timezone >/dev/null
 #sudo dpkg-reconfigure -f noninteractive tzdata
 sudo /usr/local/bin/ACG-Package-Suite/install_chrome_and_remote_desktop.sh

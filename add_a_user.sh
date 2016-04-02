@@ -19,4 +19,4 @@ sudo useradd -m -s /bin/bash $USERNAME -gsudo
 echo "$USERNAME:$PASSWORD"|sudo chpasswd
 echo "startxfce4"| sudo tee /home/$USERNAME/.chrome-remote-desktop-session
 echo "export CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES=1024x768"|sudo tee -a /home/$USERNAME/.bashrc
-
+echo "export TZ=America/New_York" | sudo tee -a /home/$USERNAME/.bashrc
