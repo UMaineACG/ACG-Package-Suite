@@ -5,9 +5,9 @@
 #
 ###################################################################
 sudo -i export DEBIAN_FRONTEND=noninteractive
-sudo apt-get -y update
-sudo apt-get -y upgrade 
-sudo apt-get -y  dist-upgrade
+sudo apt-get -y -f update
+sudo apt-get -y -f upgrade 
+sudo apt-get -y  -f dist-upgrade
 sudo apt-get install -y -f grub-legacy-ec2
 sudo grub-install --recheck /dev/vda
 sudo apt-get -f -y install
