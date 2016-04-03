@@ -10,14 +10,14 @@ sudo apt-get -y upgrade
 sudo apt-get -y  dist-upgrade
 sudo apt-get install -y -f grub-legacy-ec2
 sudo grub-install --recheck /dev/vda
-sudo apt-get -f install
+sudo apt-get -f -y install
 sudo apt-get install -y  -f xubuntu-desktop
 sudo /usr/share/debconf/fix_db.pl
 sudo apt-get -f -y install
 sudo apt-get install -y -f grub-legacy-ec2
-sudo apt-get -f install
+sudo apt-get -f -y install
 sudo grub-install --recheck /dev/vda
-sudo apt-get -f install
+sudo apt-get -f -y install
 sudo apt-get install -y -f dictionaries-common
 sudo apt-get install -y -f libreoffice
 sudo apt-get install -y -f grub-legacy-ec2
