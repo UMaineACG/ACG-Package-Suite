@@ -8,12 +8,12 @@ sudo -i export DEBIAN_FRONTEND=noninteractive
 echo "en_US.UTF-8 UTF-8" | sudo tee -a /etc/locale.gen
 sudo locale-gen
 sudo timedatectl set-timezone America/New_York
-sudo apt-get -y -f update
-sudo apt-get -y -f upgrade 
-sudo apt-get -y  -f dist-upgrade
+sudo apt-get -y  update
+sudo apt-get -y  upgrade 
+sudo apt-get -y   dist-upgrade
 sudo apt-get install -y -f grub-legacy-ec2
 sudo grub-install --recheck /dev/vda
-sudo apt-get -f -y install
+sudo apt-get  -y install
 sudo apt-get install -y  -f xubuntu-desktop
 sudo /usr/share/debconf/fix_db.pl
 sudo apt-get -f -y install
