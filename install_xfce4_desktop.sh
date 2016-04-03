@@ -42,6 +42,8 @@ sudo apt-get remove -y gnumeric
 echo "en_US.UTF-8 UTF-8" | sudo tee -a /etc/locale.gen
 sudo locale-gen
 sudo timedatectl set-timezone America/New_York
+echo PATH=\"$PATH\"| sudo tee /etc/environment
+
 
 #sudo echo "America/New_York" | sudo tee /etc/timezone >/dev/null
 #sudo dpkg-reconfigure -f noninteractive tzdata
