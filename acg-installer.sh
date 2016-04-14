@@ -84,6 +84,8 @@ while true; do
     3 )
       sh /usr/local/bin/ACG-Package-Suite/update_suite.sh;;
     4 )
-      sudo reboot -i;;
+      clear
+      sudo reboot -i
+      exit;;
   esac
 done
