@@ -25,7 +25,9 @@ install_software() {
               "1" "Window Manager (xfce)" off \
               "2" "Remote Desktop (Chrome Remote Desktop)" off \
               "3" "Office Suite (Libreoffice)" off \
-              "4" "USB IP (Connect USB devices to server)" off 2>&1 1>&3);
+              "4" "USB IP (Connect USB devices to server)" off \
+              "5" "Archivematica Server" off \
+              2>&1 1>&3);
   exec 3>&-;
   for prog in $toInstall; do
     case $prog in
@@ -34,7 +36,11 @@ install_software() {
       2)
         sh /usr/local/bin/ACG-Package-Suite/install_chrome_and_remote_desktop.sh;;
       3)
+        sh /usr/local/bin/ACG-Package-Suite/install_office_suite.sh;;
+      4)
         sh /usr/local/bin/ACG-Package-Suite/install_usbip.sh;;
+      5)
+        sh /usr/local/bin/ACG-Package-Suite/install_archivematica.sh;;
     esac
   done
 }
