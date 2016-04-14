@@ -46,10 +46,11 @@ while true; do
     --title "Menu" \
     --clear \
     --cancel-label "Exit" \
-    --menu "Please select:" $HEIGHT $WIDTH 3 \
+    --menu "Please select:" $HEIGHT $WIDTH 4 \
     "1" "Add a user" \
     "2" "Install new software" \
     "3" "Update ACG Suite" \
+    "4" "Reboot system" \
     2>&1 1>&3)
   exit_status=$?
   exec 3>&-
@@ -75,6 +76,8 @@ while true; do
     2 )
       install_software;;
     3 )
-      sh /usr/local/bin/ACG-Package-Suite/update_suite.sh
+      sh /usr/local/bin/ACG-Package-Suite/update_suite.sh;;
+    4 )
+      sudo reboot -i;;
   esac
 done
