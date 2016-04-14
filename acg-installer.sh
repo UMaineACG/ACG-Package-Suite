@@ -12,7 +12,7 @@ add_user() {
   username=$(dialog --inputbox "Please enter a username" 0 0 2>&1 1>&3);
   password=$(dialog --passwordbox "Please enter a password" 0 0 2>&1 1>&3);
   exec 3>&-;
-  sudo useradd $username;
+  sudo useradd -m -s /bin/bash $username -gsudo;
   echo "$username:$password" | sudo chpasswd;
   echo "startxfce4"| sudo tee /home/$USERNAME/.chrome-remote-desktop-session
   echo "export CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES=1024x768"|sudo tee -a /home/$USERNAME/.bashrc
