@@ -5,7 +5,8 @@ sudo apt-get install -f -y dialog
 cd /usr/local/bin
 sudo git clone https://github.com/UMaineACG/ACG-Package-Suite.git
 export PATH=$PATH:/usr/local/bin/ACG-Package-Suite:/usr/games:/usr/local/games
-PASSWORD= $(apg -n 1 -Msnc)
+sudo apt-get install -y -f apg
+export PASSWORD=$(apg -n 1 -Msnc)
 echo "ubuntu:$PASSWORD"|sudo chpasswd
 echo "Password for ubuntu has been set to $PASSWORD"
 cd ACG-Package-Suite
