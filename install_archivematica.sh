@@ -14,7 +14,13 @@ sudo ln -s /etc/uwsgi/apps-available/storage.ini /etc/uwsgi/apps-enabled/storage
 sudo service uwsgi restart
 sudo service nginx restart
 
+# Add repo for jhove dependency
+sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ trusty universe multiverse"
+sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ trusty-updates universe multiverse"
+sudo apt-get update
+
 sudo apt-get install -y openjdk-7-jre
+sudo apt-get install -y jhove
 sudo apt-get install -y archivematica-mcp-server
 sudo apt-get install -y archivematica-mcp-client
 sudo apt-get install -y archivematica-dashboard
