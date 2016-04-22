@@ -15,7 +15,7 @@ echo "Please enter a password"
 read PASSWORD
 echo "Password is $PASSWORD"
 
-sudo useradd -m -s /bin/bash $USERNAME -gsudo
+sudo useradd -m -U -G adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,netdev -s /bin/bash $USERNAME
 echo "$USERNAME:$PASSWORD"|sudo chpasswd
 sudo chage -d 0 $USERNAME
 echo "Password much be changed on first login"
