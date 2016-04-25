@@ -1,7 +1,6 @@
 #!/bin/bash
 sudo apt-get update
 sudo apt-get install -f -y git
-sudo apt-get install -f -y dialog
 cd /usr/local/bin
 sudo git clone https://github.com/UMaineACG/ACG-Package-Suite.git
 export PATH=$PATH:/usr/local/bin/ACG-Package-Suite:/usr/games:/usr/local/games

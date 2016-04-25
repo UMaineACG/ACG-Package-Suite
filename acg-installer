@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# while-menu-dialog: a menu driven system information program
+if ! dpkg-query -W -f'${Status}' "dialog" 2>/dev/null | grep -q "ok installed"; then
+  sudo apt-get install -y dialog
+fi
 
 DIALOG_CANCEL=1
 DIALOG_ESC=255
