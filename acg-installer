@@ -25,6 +25,7 @@ install_software() {
               "3" "Office Suite (Libreoffice)" off \
               "4" "USB IP (Connect USB devices to server)" off \
               "5" "Archivematica Server" off \
+              "6" "AtoM Server" off \
               2>&1 1>&3);
   exec 3>&-;
   for prog in $toInstall; do
@@ -39,6 +40,8 @@ install_software() {
         sh /usr/local/bin/ACG-Package-Suite/install_usbip.sh;;
       5)
         sh /usr/local/bin/ACG-Package-Suite/install_archivematica.sh;;
+      6)
+        sh /usr/local/bin/ACG-Package-Suite/install_atom.sh;;
     esac
   done
 }
