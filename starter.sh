@@ -1,17 +1,30 @@
 #!/bin/bash
-sudo apt-get update
-sudo apt-get install -f -y git
+
+# Stores the user who's password will be changed (based on OS)
+user_to_change_pw="ubuntu"
+
+# Check OS type and install git package
+if $(cat /etc/*-release) == *"Ubuntu"*; then
+  sudo apt-get update
+  sudo apt-get install -f -y git
+else
+  user_to_change_pw="centos"
+  sudo yum update -y
+  sudo yum install -y git
+fi
+
 cd /usr/local/bin
 sudo git clone https://github.com/UMaineACG/ACG-Package-Suite.git
 export PATH=$PATH:/usr/local/bin/ACG-Package-Suite:/usr/games:/usr/local/games
-sudo apt-get install -y -f apg
-export PASSWORD=$(apg -n 1 -Msnc)
-echo "ubuntu:$PASSWORD"|sudo chpasswd
-echo "Password for ubuntu has been set to $PASSWORD"
+
+# Randomly generate password across distro's
+export PASSWORD=$(date +%s | sha256sum | base64 | head -c 15 ; echo)
+echo "$user_to_change_pw:$PASSWORD" | sudo chpasswd
+echo "Password for $user_to_change_pw has been set to $PASSWORD"
+
 cd ACG-Package-Suite
-echo PATH=\"$PATH\"| sudo tee /etc/environment
+echo PATH=\"$PATH\" | sudo tee /etc/environment
 for SCRIPT in *.sh
    do sudo chmod 755 $SCRIPT;
 done
 echo "0 0 * * * /usr/local/bin/ACG-Package-Suite/update_suite.sh" | sudo crontab -
-

@@ -1,7 +1,14 @@
 #!/bin/bash
 
-if ! dpkg-query -W -f'${Status}' "dialog" 2>/dev/null | grep -q "ok installed"; then
-  sudo apt-get install -y dialog
+# Check OS type and install dialog package
+if $(cat /etc/*-release) == *"Ubuntu"*; then
+  if ! dpkg-query -W -f'${Status}' "dialog" 2>/dev/null | grep -q "ok installed"; then
+    sudo apt-get install -y dialog
+  fi
+else
+  if ! rpm -qa | grep -qw dialog; then
+    sudo yum install -y dialog
+  fi
 fi
 
 DIALOG_CANCEL=1
