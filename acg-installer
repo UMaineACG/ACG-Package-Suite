@@ -27,7 +27,7 @@ add_user() {
 install_software() {
   exec 3>&1;
   toInstall=$(dialog --checklist "Choose software:" 10 60 4 \
-              "1" "Window Manager (xfce)" off \
+              "1" "Window Manager" off \
               "2" "Remote Desktop (Chrome Remote Desktop)" off \
               "3" "Office Suite (Libreoffice)" off \
               "4" "USB IP (Connect USB devices to server)" off \
@@ -38,7 +38,7 @@ install_software() {
   for prog in $toInstall; do
     case $prog in
       1)
-        sh /usr/local/bin/ACG-Package-Suite/install_xfce4_desktop.sh;;
+        sh /usr/local/bin/ACG-Package-Suite/install_desktop_environment.sh;;
       2)
         sh /usr/local/bin/ACG-Package-Suite/install_chrome_and_remote_desktop.sh;;
       3)
