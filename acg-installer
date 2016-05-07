@@ -9,8 +9,8 @@ if [ "$OS" == "Ubuntu" ]; then
     sudo apt-get install -y dialog
   fi
 else
+  OP_SYS="centos"
   if ! rpm -qa | grep -qw dialog; then
-    OP_SYS="centos"
     sudo yum install -y dialog
   fi
 fi
