@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#Desktop Environment
 yum groupinstall "GNOME Desktop" "Graphical Administration Tools"
 
 # Run GDM on system boot

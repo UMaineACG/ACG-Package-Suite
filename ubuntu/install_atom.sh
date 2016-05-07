@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#AtoM Server
 # Script to install AtoM for Archivematica
 git clone https://github.com/nh-99/docker-atom.git
 sudo docker build -t arv3054/atom docker-atom

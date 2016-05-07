@@ -1,5 +1,6 @@
 #!/bin/bash
 
+OP_SYS="ubuntu"
 # Check OS type and install dialog package
 . /etc/lsb-release
 OS=$DISTRIB_ID
@@ -28,31 +29,21 @@ add_user() {
 }
 
 install_software() {
+  COUNTER=1
+  RADIOLIST=()
+  SCRIPTLIST=()
+  for i in /usr/local/bin/ACG-Package-Suite/$OP_SYS/*; do
+    line="$(sed -n '2p' $i)"
+    OPTION="${line//#}"
+    SCRIPTLIST+=($i)
+    RADIOLIST+=($COUNTER "${OPTION}" off)
+    let COUNTER=COUNTER+1
+  done
   exec 3>&1;
-  toInstall=$(dialog --checklist "Choose software:" 10 60 4 \
-              "1" "Window Manager" off \
-              "2" "Remote Desktop (Chrome Remote Desktop)" off \
-              "3" "Office Suite (Libreoffice)" off \
-              "4" "USB IP (Connect USB devices to server)" off \
-              "5" "Archivematica Server" off \
-              "6" "AtoM Server" off \
-              2>&1 1>&3);
+  toInstall=$(dialog --checklist "Choose software:" 10 60 1 "${RADIOLIST[@]}" 2>&1 1>&3);
   exec 3>&-;
   for prog in $toInstall; do
-    case $prog in
-      1)
-        sh /usr/local/bin/ACG-Package-Suite/install_desktop_environment.sh;;
-      2)
-        sh /usr/local/bin/ACG-Package-Suite/install_chrome_and_remote_desktop.sh;;
-      3)
-        sh /usr/local/bin/ACG-Package-Suite/install_office_suite.sh;;
-      4)
-        sh /usr/local/bin/ACG-Package-Suite/install_usbip.sh;;
-      5)
-        sh /usr/local/bin/ACG-Package-Suite/install_archivematica.sh;;
-      6)
-        sh /usr/local/bin/ACG-Package-Suite/install_atom.sh;;
-    esac
+    sudo sh ${SCRIPTLIST[$prog-1]}
   done
 }
 
