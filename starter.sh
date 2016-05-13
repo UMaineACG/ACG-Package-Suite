@@ -4,7 +4,9 @@
 user_to_change_pw="ubuntu"
 
 # Check OS type and install git package
-sudo apt-get install python
+sudo apt-get install -y python
+sudo yum install -y python
+
 OS=$(python -mplatform | grep -Eo Ubuntu)
 if [ "$OS" == "Ubuntu" ]; then
   sudo apt-get update
