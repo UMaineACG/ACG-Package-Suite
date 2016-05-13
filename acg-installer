@@ -3,7 +3,8 @@
 OP_SYS="ubuntu"
 # Check OS type and install dialog package
 
-OS=$(python -mplatform | grep -Eo Ubuntu)
+. /etc/lsb-release
+OS=$DISTRIB_ID
 if [ "$OS" == "Ubuntu" ]; then
   if ! dpkg-query -W -f'${Status}' "dialog" 2>/dev/null | grep -q "ok installed"; then
     sudo apt-get install -y dialog
