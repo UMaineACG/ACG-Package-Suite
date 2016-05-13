@@ -4,7 +4,8 @@
 user_to_change_pw="ubuntu"
 
 # Check OS type and install git package
-OS=$(python -mplatform | grep -Eo Ubuntu)
+. /etc/lsb-release
+OS=$DISTRIB_ID
 if [ "$OS" == "Ubuntu" ]; then
   sudo apt-get update
   sudo apt-get install -f -y git
