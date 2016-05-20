@@ -2,6 +2,7 @@
 #Matlab
 username=$(tempfile 2>/dev/null)
 password=$(tempfile 2>/dev/null)
+cd ~/
 mkdir matlab && cd matlab
 dialog --title "UMS Username" --clear --inputbox "Enter your username for your UMS account" 10 30 2> $username
 dialog --title "UMS Password" --clear --passwordbox "Enter your password for your UMS account" 10 30 2> $password
