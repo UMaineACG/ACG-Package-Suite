@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if $(cat /etc/*-release) == *"Ubuntu"*; then
-  sh /usr/local/bin/ACG-Package-Suite/ubuntu/install_xfce_desktop.sh
+if grep -q "Ubuntu"  /etc/*-release; then
+  sudo sh /usr/local/bin/ACG-Package-Suite/ubuntu/install_xfce4_desktop.sh
 else
-  sh /usr/local/bin/ACG-Package-Suite/centos/install_gnome_desktop.sh
+  sudo sh /usr/local/bin/ACG-Package-Suite/centos/install_gnome_desktop.sh
 fi
