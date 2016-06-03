@@ -2,30 +2,30 @@
 
 #Make sure we're running as root.
 if [ "$(id -u)" != "0" ]; then
-    echo "This script must be run as root"
+    echo "This script must be run as root!"
     exit 1
 fi
 
 
 echo "Updating software sources..."
-apt-get update &
+apt-get -qq update & # -qq silences all messages except for errors. Pretty cool.
 wait
 echo "Software sources updated!"
 
 echo "Installing base dependencies..."
-apt-get install python3 python3-pip npm nodejs-legacy &
+apt-get -qq install -y python3 python3-pip npm nodejs-legacy &
 wait
 echo "Base dependencies installed!"
 
 echo "Installing node dependencies..."
-npm install -g configurable-http-proxy &
+npm --silent install -g configurable-http-proxy &
 wait
 echo "Node dependencies installed!"
 
 echo "Installing JupyterHub and JupyterHub Notebook..."
-pip3 install jupyterhub &
+pip3 -q install jupyterhub &
 wait
-pip3 install --upgrade notebook &
+pip3 -q install --upgrade notebook &
 wait
 echo "JupyterHub and JupyterHub Notebook installed!"
 
