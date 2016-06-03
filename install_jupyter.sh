@@ -1,0 +1,1 @@
+apt-get install python3 pip3 npm nodejs-legacy && npm install -g configurable-http-proxy && pip3 install jupyterhub && pip3 install --upgrade notebook && echo "To start the JupiyterHub server, run 'jupyterhub' as root."
