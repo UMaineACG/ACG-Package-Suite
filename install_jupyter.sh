@@ -1,11 +1,3 @@
-#!/bin/bash
-
-#Make sure we're running as root.
-if [ "$(id -u)" != "0" ]; then
-    echo "This script must be run with sudo!"
-    exit 1
-fi
-
 echo "Updating software sources..."
 sudo apt-get -qq update > /dev/null & # -qq silences all messages except for errors. Pretty cool.
 wait
