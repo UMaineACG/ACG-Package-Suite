@@ -2,7 +2,6 @@
 
 OP_SYS="ubuntu"
 # Check OS type and install dialog package
-
 . /etc/lsb-release
 OS=$DISTRIB_ID
 if [ "$OS" == "Ubuntu" ]; then
