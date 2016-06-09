@@ -11,6 +11,7 @@ if [ "$OS" == "Ubuntu" ]; then
   sudo apt-get install -f -y git
 else
   user_to_change_pw="centos"
+  sed -i.bak '/Defaults    requiretty/d' /etc/sudoers # Remove the requiretty flag so that sudo works
   sudo yum update -y
   sudo yum install -y git
 fi
