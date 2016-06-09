@@ -19,7 +19,7 @@ fi
 
 cd /usr/local/bin
 sudo git clone https://github.com/UMaineACG/ACG-Package-Suite.git
-export PATH=$PATH:/usr/local/bin/ACG-Package-Suite:/usr/games:/usr/local/games
+export PATH=$PATH:/usr/local/bin/ACG-Package-Suite:/usr/local/bin/ACG-Package-Suite/$user_to_change_pw:/usr/games:/usr/local/games
 
 # Randomly generate password across distro's
 export PASSWORD=$(date +%s | sha256sum | base64 | head -c 15 ; echo)
