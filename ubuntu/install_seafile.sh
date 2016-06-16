@@ -1,4 +1,5 @@
 #!/bin/bash
+#Seafile Client
 export SFCLIENT=seafile_5.1.0_amd64.deb
 cd
 sudo  apt-get update

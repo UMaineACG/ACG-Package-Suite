@@ -1,4 +1,5 @@
 #!/bin/bash
+#JupyterHub
 echo "Updating software sources..."
 sudo apt-get -qq update > /dev/null & # -qq silences all messages except for errors. Pretty cool.
 wait
