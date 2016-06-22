@@ -9,6 +9,9 @@ OS=$DISTRIB_ID
 if [ "$OS" == "Ubuntu" ]; then
   sudo apt-get update
   sudo apt-get install -f -y git
+  #Fix /etc/hosts entry for sudo to stop complaining
+  newline="127.0.0.1 localhost $HOSTNAME"
+  sudo sed -i.bak "1s/.*/$newline/" /etc/hosts
 else
   user_to_change_pw="centos"
   sed -i.bak '/Defaults    requiretty/d' /etc/sudoers # Remove the requiretty flag so that sudo works
