@@ -1,7 +1,7 @@
 #!/bin/bash
 #Desktop Environment
-sudo yum groupinstall "GNOME Desktop" "Graphical Administration Tools"
-sudo yum install libreoffice
+sudo yum groupinstall -y "GNOME Desktop" "Graphical Administration Tools"
+sudo yum install -y libreoffice
 
 # Run GDM on system boot
 sudo systemctl enable gdm.service
