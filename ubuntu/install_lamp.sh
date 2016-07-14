@@ -1,4 +1,6 @@
 #!/bin/bash
+#LAMP Stack
+
 echo "Installing LAMP stack..."
 sh install_apache.sh > /dev/null &
 wait

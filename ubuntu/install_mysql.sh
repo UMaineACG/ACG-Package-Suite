@@ -1,4 +1,6 @@
 #!/bin/bash
+#MySQL
+
 echo "Updating software sources..."
 sudo apt-get update > /dev/null &
 wait

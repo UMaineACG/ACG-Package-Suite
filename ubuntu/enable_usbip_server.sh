@@ -1,4 +1,6 @@
 #!/bin/bash
+#Enable USBIP
+
 # This just installs usbip and adds kernel modules,
 # it is ***not*** a complete package.
 

@@ -1,9 +1,5 @@
 #!/bin/bash
-
-echo "Making doubly-sure USB IP is installed..."
-sudo apt-get install -y usbip > /dev/null &
-wait
-echo "Done!"
+#Enable USBIP client
 
 echo "Adding needed kernel modules..."
 sudo modprobe vhci-hcd
