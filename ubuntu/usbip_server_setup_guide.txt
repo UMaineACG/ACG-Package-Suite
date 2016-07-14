@@ -1,0 +1,10 @@
+USB IP SERVER SETUP GUIDE
+
+1. Run the USB IP enabler script located in this folder.
+2. If everything went well, plug in your USB device.
+3. Run "lsusb" and verify that your device was detected correctly. Note the
+device ID.
+4. Run "usbip_bind_driver --list" and find the busid that corresponds to your
+USB device ID.
+5. Run "usbip_bind_driver --usbip x" where x is the desired busid.
+6. Make sure port 3240 is open.
