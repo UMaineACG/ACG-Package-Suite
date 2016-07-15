@@ -5,7 +5,7 @@ check_for_key() {
   read -s -n 1 key
 }
 
-printf  "\n\n This script was created based on the install procedure here\n"
+printf  "\n\nThis script was created based on the install procedure here\n"
 printf  "\nhttps://umaine.edu/it/software/\n"
 printf "\nIf you have trouble you should check it out\n"
 printf "Several times during the install, firefox will be launched \nfor you to interact with the MathWorks web site.\n"
@@ -29,9 +29,12 @@ clear
 echo "Now you must download Matlab. A web browser will open up to the download page."
 echo "You must sign in with your newly created account to download the installe r."
 echo "Download the Linux (64-bit) version, and make sure to click 'Save File'"
+echo "NOT open with (even though that is the default choice)"
+echo
 echo "Once you have downloaded it, please close the browser window."
 echo
-echo "It may not be obvious that the download has taken place as it generally happens quickly"
+echo "It may not be obvious that the download has taken place as it generally happens"
+echo "quickly"
 echo
 echo "Press enter to continue"
 check_for_key
@@ -46,7 +49,7 @@ echo "to install.  Selecting more products increases the time to install and"
 echo "the space required."
 echo
 echo "Finally, it will give you an option to"
-echo ""\"Create symbolic links to MATLAB scripts in:\""
+echo "\"Create symbolic links to MATLAB scripts in:\""
 echo "please check the box (it is not checked by default) and leave the path as is"
 echo
 echo "Press enter to continue"
