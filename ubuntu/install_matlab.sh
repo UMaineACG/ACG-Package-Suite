@@ -5,12 +5,12 @@ check_for_key() {
   read -s -n 1 key
 }
 
-echo "This script was created based on the install procedure here"
-echo "https://umaine.edu/it/software/"
+printf  "This script was created based on the install procedure here\n"
+printf  "\nhttps://umaine.edu/it/software/\n"
 printf "\nIf you have trouble you should check it out\n"
 printf "Several times during the install, firefox will be launched \nfor you to interact with the MathWorks web site.\n"
-printf "After doing what needs to be done, close the browser to get back to this script"
-echo "Press any key to continue"
+printf "\nAfter doing what needs to be done, close the browser to get \nback to this script\n"
+printf  "\nPress any key to continue\n"
 check_for_key
 clear
 
