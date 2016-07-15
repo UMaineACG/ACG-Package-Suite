@@ -61,5 +61,5 @@ rm -f ~/Downloads/matlab*.zip
 rm -rf /tmp/matlab
 rmdir /tmp/matlab
 sudo apt-get update
-sudo apt-get install -y matlab-support
+sudo apt-get install -y -f  matlab-support
 echo "Done"
