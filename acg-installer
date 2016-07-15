@@ -49,7 +49,7 @@ install_software() {
   toInstall=$(dialog --checklist "Choose software:" 10 60 $COUNTER "${RADIOLIST[@]}" 2>&1 1>&3);
   exec 3>&-;
   for prog in $toInstall; do
-    sudo sh ${SCRIPTLIST[$prog-1]}
+    sh ${SCRIPTLIST[$prog-1]}
   done
 }
 
