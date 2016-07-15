@@ -37,11 +37,13 @@ install_software() {
   RADIOLIST=()
   SCRIPTLIST=()
   for i in /usr/local/bin/ACG-Package-Suite/$OP_SYS/*; do
-    line="$(sed -n '2p' $i)"
-    OPTION="${line//#}"
-    SCRIPTLIST+=($i)
-    RADIOLIST+=($COUNTER "${OPTION}" off)
-    let COUNTER=COUNTER+1
+    if [[ $i == *.sh ]] ; then
+      line="$(sed -n '2p' $i)"
+      OPTION="${line//#}"
+      SCRIPTLIST+=($i)
+      RADIOLIST+=($COUNTER "${OPTION}" off)
+      let COUNTER=COUNTER+1
+    fi
   done
   exec 3>&1;
   toInstall=$(dialog --checklist "Choose software:" 10 60 $COUNTER "${RADIOLIST[@]}" 2>&1 1>&3);
