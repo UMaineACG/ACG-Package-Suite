@@ -11,6 +11,8 @@ sudo dpkg -i chrome-remote-desktop*.deb
 sudo apt-get -f -y install
 sudo apt-get install -f -y xvfb python-psutil xbase-clients x11-xserver-utils
 sudo dpkg -i chrome-remote-desktop*.deb
+rm *
+rmdir /tmp/ACG
 for USER in /home/*
    do 
      str1="startxfce4"
