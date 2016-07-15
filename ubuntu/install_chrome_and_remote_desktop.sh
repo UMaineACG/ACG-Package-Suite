@@ -15,6 +15,6 @@ for USER in '/home/*'
      file1=$USER/.chrome-remote-desktop-session
      str2="export CHROME_REMOTE_DESKTOP_DEFAULT_DESKTOP_SIZES=1024x768"
      file2=$USER/.bashrc
-    grep -Fqx $str1 $file1 || echo  $str1 | sudo tee -a $file1
-    grep -Fqx $str2 $file2 || echo $str2 | sudo tee -a $file2
+    grep -Fqx "$str1" $file1 || echo  $str1 | sudo tee -a $file1
+    grep -Fqx "$str2" $file2 || echo $str2 | sudo tee -a $file2
 done
