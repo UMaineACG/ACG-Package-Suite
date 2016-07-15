@@ -2,7 +2,7 @@
 #Matlab
 
 check_for_key() {
-  read  -n 1 key
+  read  -s -n 1 key
 }
 
 printf  "\n\nThis script was created based on the install procedure here\n"
