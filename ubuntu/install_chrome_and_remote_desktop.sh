@@ -9,7 +9,7 @@ sudo dpkg -i chrome-remote-desktop*.deb
 sudo apt-get -f -y install
 sudo apt-get install -f -y xvfb python-psutil xbase-clients x11-xserver-utils
 sudo dpkg -i chrome-remote-desktop*.deb
-for USER in '/home/*' 
+for USER in /home/*
    do 
      str1="startxfce4"
      file1=$USER/.chrome-remote-desktop-session
