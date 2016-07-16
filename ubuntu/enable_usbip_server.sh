@@ -4,11 +4,6 @@
 # This just installs usbip and adds kernel modules,
 # it is ***not*** a complete package.
 
-echo "Installing USB IP via apt... \n It SHOULD already be installed via kernel, \n but just in case..." &
-sudo apt-get install -y usbip > /dev/null &
-wait
-echo "All set!"
-
 echo "enabling USB IP kernel modules..."
 sudo modprobe usbip > /dev/null &
 sudo modprobe usbip_common_mod > /dev/null &
