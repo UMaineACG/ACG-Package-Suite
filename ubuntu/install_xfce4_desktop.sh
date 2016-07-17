@@ -48,7 +48,7 @@ echo PATH=\"$PATH\"| sudo tee /etc/environment
 
 #sudo echo "America/New_York" | sudo tee /etc/timezone >/dev/null
 #sudo dpkg-reconfigure -f noninteractive tzdata
-sudo /usr/local/bin/ACG-Package-Suite/install_chrome_and_remote_desktop.sh
+/usr/local/bin/ACG-Package-Suite/ubuntu/install_chrome_and_remote_desktop.sh
 
 sudo rm /var/crash/*
 
