@@ -28,7 +28,7 @@ add_user() {
   fi
   exec 3>&-;
   if [ "$username" != "" ] && [ "$password" != "" ] ; then
-    printf "$username\n$password" | sh /usr/local/bin/ACG-Package-Suite/add_a_user.sh
+    printf "$username\n$password" | sh /usr/local/bin/ACG-Package-Suite/$OP_SYS/add_a_user.sh
   fi
 }
 
