@@ -40,9 +40,13 @@ install_software() {
     if [[ $i == *.sh ]] ; then
       line="$(sed -n '2p' $i)"
       OPTION="${line//#}"
-      SCRIPTLIST+=($i)
-      RADIOLIST+=($COUNTER "${OPTION}" off)
-      let COUNTER=COUNTER+1
+      if [[ $OPTION == "ignore" ]] ; then
+        echo "Ignore"
+      else
+        SCRIPTLIST+=($i)
+        RADIOLIST+=($COUNTER "${OPTION}" off)
+        let COUNTER=COUNTER+1
+      fi
     fi
   done
   exec 3>&1;
