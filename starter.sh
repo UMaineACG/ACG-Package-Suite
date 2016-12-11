@@ -19,15 +19,9 @@ else
   sudo yum install -y git
 fi
 
-
 cd /usr/local/bin
 sudo git clone https://github.com/UMaineACG/ACG-Package-Suite.git
 export PATH=$PATH:/usr/local/bin/ACG-Package-Suite:/usr/local/bin/ACG-Package-Suite/$user_to_change_pw:/usr/games:/usr/local/games
-
-# Randomly generate password across distro's
-export PASSWORD=$(date +%s | sha256sum | base64 | head -c 8 ; echo)
-echo "$user_to_change_pw:$PASSWORD" | sudo chpasswd
-echo "Password for $user_to_change_pw has been set to $PASSWORD"
 
 cd ACG-Package-Suite
 echo PATH=\"$PATH\" | sudo tee /etc/environment
@@ -35,3 +29,20 @@ for SCRIPT in *.sh
    do sudo chmod 755 $SCRIPT;
 done
 echo "0 0 * * * /usr/local/bin/ACG-Package-Suite/update_suite.sh" | sudo crontab -
+
+# Add in a default user and ssh key
+printf "user\nacgrocks" | /usr/local/bin/ACG-Package-Suite/$user_to_change_pw/add_a_user.sh
+sudo mkdir /home/user/.ssh
+sudo mv /home/$user_to_change_pw/.ssh/authorized_keys /home/user/.ssh
+sudo chmod 600 /home/user/.ssh/authorized_keys
+sudo chown -R user /home/user
+
+# Delete the default ubuntu user
+if [ "$OS" == "Ubuntu" ]; then
+  killall -9 -u $user_to_change_pw
+  deluser --remove-home $user_to_change_pw
+else
+  sudo yum install -y psmisc
+  killall -9 -u $user_to_change_pw
+  userdel --remove $user_to_change_pw
+fi
