@@ -1,4 +1,5 @@
 #!/bin/bash
+# Software for ECE 477
 # Install a base GUI
 sudo apt-get update
 sudo apt autoremove
