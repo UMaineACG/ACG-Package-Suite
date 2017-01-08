@@ -46,3 +46,18 @@ else
   killall -9 -u $user_to_change_pw
   userdel --remove $user_to_change_pw
 fi
+export PASSWORD=$(date +%s | sha256sum | base32 | head -c 8 ; echo)
+echo "acg:$PASSWORD" | sudo chpasswd
+echo "Password for acg has been set to $PASSWORD"
+
+# Modify rc.local to randomize acg password with each boot
+# (and print to log)
+
+# delete the last line (exit(0))
+sudo sed -i '$ d' /etc/rc.local
+
+echo "export PASSWORD=\$(date +%s | sha256sum | base32 | head -c 8 ; echo)" |sudo tee -a /etc/rc.local
+echo "echo \"acg:\$PASSWORD\" | sudo chpasswd" |sudo tee -a /etc/rc.local
+echo "echo \"Password for acg has been set to \$PASSWORD\"" |sudo tee -a /etc/rc.local
+echo "exit 0" |sudo tee -a /etc/rc.local
+
