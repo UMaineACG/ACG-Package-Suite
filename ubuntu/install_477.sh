@@ -2,7 +2,7 @@
 # Install a base GUI
 sudo apt-get update
 sudo apt autoremove
-sudo apt-get install xubuntu-core^
+sudo apt-get -y install xubuntu-core^
 
 sudo rm /var/crash/*
 sudo apt-get -y autoremove
@@ -22,9 +22,9 @@ sudo apt-get -y autoremove
 export PREFIX=/usr/local
 cd
 sudo apt-get remove avrdude
-sudo apt-get install -f   build-essential wget gcc libevent-dev libcurl3 python-gtk2-dev uuid-dev libsqlite0-dev libjansson-dev intltool cmake  libfuse-dev libtool  gcc
+sudo apt-get install -f -y  build-essential wget gcc libevent-dev libcurl3 python-gtk2-dev uuid-dev libsqlite0-dev libjansson-dev intltool cmake  libfuse-dev libtool  gcc
 
-sudo apt-get install -f  make automake autoconf flex bison libusb-dev libusb-1.0-0-dev  libx11-dev libftdi1 subversion
+sudo apt-get install -f  -y make automake autoconf flex bison libusb-dev libusb-1.0-0-dev  libx11-dev libftdi1 subversion
 wget http://download.savannah.gnu.org/releases/avrdude/avrdude-doc-6.3.pdf
 
 mkdir avrdude
@@ -49,12 +49,12 @@ sudo apt-get -f install
 sudo apt autoremove
 
 sudo apt-get -f install
-sudo apt-get install gcc-avr
+sudo apt-get install -y gcc-avr
 sudo apt-get -f install
 sudo apt autoremove
 
-sudo apt-get install binutils-avr
-sudo apt-get install avr-libc
+sudo apt-get install -y binutils-avr
+sudo apt-get install -y avr-libc
 
 sudo apt autoremove
 
