@@ -2,19 +2,8 @@
 # Software for ECE 477
 # Install a base GUI
 sudo apt-get update
-sudo apt autoremove
-sudo apt-get -y install xubuntu-core^
+sudo apt -y autoremove
 
-sudo rm /var/crash/*
-sudo apt-get -y autoremove
-sudo apt-get remove -y light-locker
-sudo apt-get remove -y gnome-screensaver
-sudo apt-get remove -y xscreensaver
-sudo apt-get remove -y abiword
-sudo apt-get remove -y gnumeric
-sudo apt-get -y autoremove
-sudo apt-get update
-sudo apt-get upgrade
 sudo apt-get -y autoremove
 
 # Code to download, patch, and build avrdude 6.3 on Ubuntu
@@ -46,12 +35,12 @@ sudo make install
 
 ## Other avr stuff
 
-sudo apt-get -f install
+sudo apt-get -f -y install
 sudo apt autoremove
 
-sudo apt-get -f install
+sudo apt-get -f -y install
 sudo apt-get install -y gcc-avr
-sudo apt-get -f install
+sudo apt-get -f -y install
 sudo apt autoremove
 
 sudo apt-get install -y binutils-avr
