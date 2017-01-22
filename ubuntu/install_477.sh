@@ -14,7 +14,7 @@ cd
 sudo apt-get remove avrdude
 sudo apt-get install -f -y  build-essential wget gcc libevent-dev libcurl3 python-gtk2-dev uuid-dev libsqlite0-dev libjansson-dev intltool cmake  libfuse-dev libtool  gcc
 
-sudo apt-get install -f  -y make automake autoconf flex bison libusb-dev libusb-1.0-0-dev  libx11-dev libftdi1 subversion
+sudo apt-get install -f  -y make automake autoconf flex bison libusb-dev libusb-1.0-0-dev  libx11-dev libftdi1 subversion vim
 wget http://download.savannah.gnu.org/releases/avrdude/avrdude-doc-6.3.pdf
 
 mkdir avrdude
