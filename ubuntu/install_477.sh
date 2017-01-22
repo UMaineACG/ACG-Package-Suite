@@ -1,6 +1,7 @@
 #!/bin/bash
 # Software for ECE 477
 # Install a base GUI
+
 sudo apt-get update
 sudo apt -y autoremove
 
@@ -47,6 +48,10 @@ sudo apt-get install -y binutils-avr
 sudo apt-get install -y avr-libc
 
 sudo apt autoremove
+
+/usr/local/bin/ACG-Package-Suite/ubuntu/install_usbip.sh
+/usr/local/bin/ACG-Package-Suite/ubuntu/install_seafile.sh
+/usr/local/bin/ACG-Package-Suite/ubuntu/install_chrome_and_remote_desktop.sh
 
 
 
