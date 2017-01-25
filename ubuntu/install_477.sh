@@ -52,6 +52,7 @@ sudo apt autoremove
 /usr/local/bin/ACG-Package-Suite/ubuntu/install_usbip.sh
 /usr/local/bin/ACG-Package-Suite/ubuntu/install_seafile.sh
 /usr/local/bin/ACG-Package-Suite/ubuntu/install_chrome_and_remote_desktop.sh
+sudo apt-get install firmware-b43-installer
 
 
 
