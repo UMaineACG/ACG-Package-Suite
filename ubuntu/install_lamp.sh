@@ -2,9 +2,9 @@
 #LAMP Stack
 
 echo "Installing LAMP stack..."
-sh install_apache.sh > /dev/null &
+sh ${BASH_SOURCE%/*}/install_apache.sh
 wait
-sh install_mysql.sh > /dev/null &
+sh ${BASH_SOURCE%/*}/install_mysql.sh
 wait
-sh install_php.sh > /dev/null &
+sh ${BASH_SOURCE%/*}/install_php.sh
 echo "LAMP stack installed!"
