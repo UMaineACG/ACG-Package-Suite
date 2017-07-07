@@ -2,9 +2,9 @@
 #LAMP Stack
 
 echo "Installing LAMP stack..."
-sh ${BASH_SOURCE%/*}/install_apache.sh
+sh /usr/local/bin/ACG-Package-Suite/ubuntu/install_apache.sh
 wait
-sh ${BASH_SOURCE%/*}/install_mysql.sh
+sh /usr/local/bin/ACG-Package-Suite/ubuntu/install_mysql.sh
 wait
-sh ${BASH_SOURCE%/*}/install_php.sh
+sh /usr/local/bin/ACG-Package-Suite/ubuntu/install_php.sh
 echo "LAMP stack installed!"
