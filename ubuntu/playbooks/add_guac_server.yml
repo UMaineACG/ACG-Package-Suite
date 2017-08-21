@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+  vars:
+    guac_ip: "{{ip}}"
+  tasks:
+
+  - name: Add guacamole line
+    become: true
+    lineinfile:
+      path: /etc/ansible/hosts
+      line: "[guacamole]"
+      state: present
+
+  - name: Add server to inventory
+    become: true
+    lineinfile:
+      path: /etc/ansible/hosts
+      insertafter: '[guacamole]'
+      line: "{{guac_ip}}"
+      state: present

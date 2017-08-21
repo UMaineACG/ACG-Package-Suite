@@ -1,0 +1,63 @@
+---
+- hosts: guacamole
+  vars:
+    conn_type: "{{type}}"
+    conn_port: "{{c_port}}"
+    conn_name: "{{c_name}}"
+    conn_pass: "{{c_pass}}"
+    host_name: "{{host}}"
+    user_name: "{{user}}"
+    password: "{{pass}}"
+  tasks:
+
+  - name: Add authorization section if not there
+    become: true
+    lineinfile:
+      insertafter: '<user-mapping>'
+      path: /etc/guacamole/user-mapping.xml
+      line: "    <authorize username=\"{{user_name}}\" password=\"{{password}}\" encoding=\"md5\">"
+      state: present
+
+  - name: Closing tag
+    become: true
+    lineinfile:
+      insertbefore: '</user-mapping>'
+      path: /etc/guacamole/user-mapping.xml
+      line: "    </authorize>"
+      state: present
+
+  - name: Add connection to guac server
+    become: true
+    blockinfile:
+      insertafter: '<authorize.*username=\"{{user_name}}\".*password=\"{{password}}\".*>'
+      path: /etc/guacamole/user-mapping.xml
+      state: present
+      block: |
+        fakeline
+                <connection name="{{conn_name}}">
+                    <protocol>{{conn_type}}</protocol>
+                    <param name="hostname">{{host_name}}</param>
+                    <param name="port">{{conn_port}}</param>
+                    <param name="password">{{conn_pass}}</param>
+                </connection>
+
+  - name: Remove unwanted lines
+    become: true
+    block:
+      - name: Remove \# BEGIN ANSIBLE MANAGED BLOCK
+        lineinfile:
+          path: /etc/guacamole/user-mapping.xml
+          state: absent
+          line: "# BEGIN ANSIBLE MANAGED BLOCK"
+
+      - name: Remove \# END ANSIBLE MANAGED BLOCK
+        lineinfile:
+          path: /etc/guacamole/user-mapping.xml
+          state: absent
+          line: "# END ANSIBLE MANAGED BLOCK"
+
+      - name: Remove fakeline
+        lineinfile:
+          path: /etc/guacamole/user-mapping.xml
+          state: absent
+          line: fakeline

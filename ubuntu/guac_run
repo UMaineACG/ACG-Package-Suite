@@ -1,0 +1,32 @@
+#!/usr/bin/perl
+print "Enter the ip of the guacamole server:\n";
+$ip = <STDIN>;
+
+print "\nEnter the type of connection (VNC, RDP, SSH, etc):\n";
+$conn_type = <STDIN>;
+
+print "\nEnter the port used for that connection (5900, 3389, 22, etc):\n";
+$conn_port = <STDIN>;
+
+print "\nEnter the name you want to use for the connection:\n";
+print "<connection name=\"NAME YOU ENTER HERE\">\n";
+$conn_name = <STDIN>;
+
+print "\nEnter password for that connection:\n";
+print "<param name=\"password\">PASSWORD YOU ENTER HERE</param>\n";
+$conn_pass = <STDIN>;
+
+print "\nEnter the hostname for this connection:\n";
+print "<param name=\"hostname\">HOSTNAME YOU ENTER HERE</param>\n";
+$host_name = <STDIN>;
+
+print "\nEnter the username for the ACCOUNT:\n";
+$user_name = <STDIN>;
+
+print "\nEnter the password for the ACCOUNT:\n";
+$t_password = <STDIN>;
+
+$password = `printf '%s' "$t_password" | md5sum`;
+
+`ansible-playbook playbooks/add_guac_server.yml --ask-sudo-pass --extra-vars "ip=$ip"`;
+`ansible-playbook playbooks/add_guac_connection.yml --ask-sudo-pass --extra-vars "type=$conn_type c_port=$conn_port c_name=$conn_name c_pass=$conn_pass host=$host_name user=$user_name pass=$password"`;

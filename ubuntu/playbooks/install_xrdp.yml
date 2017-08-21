@@ -1,0 +1,310 @@
+---
+- hosts: localhost
+  vars:
+    xrdp_version: 0.9.2
+    xorgxrdp_version: 0.2.3
+    pulseaudio_version: 8.0
+  tasks:
+
+  - name: Fix localization
+    become: true
+    lineinfile:
+      path: /etc/locale.gen
+      line: "en_US.UTF-8 UTF-8"
+      state: present
+
+  - name: Run locale-gen
+    shell: locale-gen
+
+  - name: Set timezone
+    become: true
+    shell: timedatectl set-timezone America/New_York
+
+  - name: Install aptitude
+    become: true
+    apt:
+      name: aptitude
+      state: present
+
+  - name: Update and upgrade
+    become: true
+    apt:
+      update_cache: true
+      upgrade: yes
+
+  - name: Install xfce-core
+    block:
+      - name: Install xfce-core
+        become: true
+        apt:
+          name: xubuntu-core
+          state: present
+    rescue:
+      - name: Retry install xfce-core
+        become: true
+        apt:
+          name: xubuntu-core
+          state: present
+
+  - name: Install manpages
+    become: true
+    apt: name={{item}} state=present
+    with_items:
+      - man
+      - manpages
+      - manpages-dev
+      - freebsd-manpages
+      - funny-manpages
+      - man2html
+      - manpages-posix
+      - manpages-posix-dev
+      - asr-manpages
+
+  - name: Install other libraries
+    become: true
+    apt: name={{item}} state=present
+    with_items:
+      - xvfb
+      - python-psutil
+      - xbase-clients
+      - libxss1
+      - libappindicator1
+      - libindicator7
+      - firefox
+
+  - name: Clean up extra stuff
+    become: true
+    apt: name={{item}} state=absent
+    with_items:
+      - light-locker
+      - gnome-screensaver
+      - xscreensaver
+      - abiword
+      - gnumeric
+
+  - name: More cleanup
+    become: true
+    apt:
+      autoremove: yes
+
+  - name: Install basic tools
+    become: true
+    apt: name={{item}} state=present
+    with_items:
+      - git
+      - nasm
+      - bison
+      - flex
+      - autoconf
+      - libtool
+      - pkg-config
+      - make
+      - fakeroot
+
+  - name: build dependencies for  development libraries
+    become: true
+    apt: name={{item}} state=build-dep
+    with_items:
+      - libx11-dev
+      - dpkg-dev
+      - libavformat-dev
+      - libxml2-dev
+      - libfuse-dev
+      - libopus-dev
+      - libmp3lame-dev
+      - libfl-dev
+      - libxml2-dev
+      - libxrandr-dev
+      - libssl-dev
+      - libpam0g-dev
+      - libxfixes-dev
+      - libjpeg-dev
+      - xutils-dev
+      - libpulse-dev
+      - xserver-xorg-dev
+      - pulseaudio
+
+  - name: Install development libraries
+    become: true
+    apt: name={{item}} state=present
+    with_items:
+      - libx11-dev
+      - libavformat-dev
+      - libxml2-dev
+      - libfuse-dev
+      - libopus-dev
+      - libmp3lame-dev
+      - libfl-dev
+      - libxml2-dev
+      - libxrandr-dev
+      - libssl-dev
+      - libpam0g-dev
+      - libxfixes-dev
+      - libjpeg-dev
+      - xutils-dev
+      - libpulse-dev
+      - xserver-xorg-dev
+
+  - name: Install everything else
+    become: true
+    apt: name={{item}} state=present
+    with_items:
+      - intltool
+      - xsltproc
+      - python-libxml2
+      - xutils
+      - xfce4
+
+  - name: Fix dixfont.h
+    become: true
+    lineinfile:
+      path: /usr/include/xorg/dixfont.h
+      line: '#include <X11/fonts/fontutil.h>'
+      state: absent
+
+  - name: Get pulseaudio source
+    shell: cd /tmp && apt-get source -y pulseaudio
+
+  - name: Download xrdp
+    get_url:
+      url: https://github.com/neutrinolabs/xrdp/releases/download/v{{xrdp_version}}/xrdp-{{xrdp_version}}.tar.gz
+      dest: /tmp/xrdp.tar.gz
+
+  - name: Unzip xrdp source
+    unarchive:
+      src: /tmp/xrdp.tar.gz
+      dest: /tmp/
+
+  - name: Download Xorgxrdp
+    get_url:
+      url: https://github.com/neutrinolabs/xorgxrdp/releases/download/v{{xorgxrdp_version}}/xorgxrdp-{{xorgxrdp_version}}.tar.gz
+      dest: /tmp/xorgxrdp.tar.gz
+
+  - name: Unzip xorgxrdp source
+    unarchive:
+      src: /tmp/xorgxrdp.tar.gz
+      dest: /tmp/
+
+  - name: Bootstrap xrdp
+    shell: cd /tmp/xrdp-{{xrdp_version}}/ && ./bootstrap
+
+  - name: Configure xrdp
+    shell: cd /tmp/xrdp-{{xrdp_version}}/ && ./configure --enable-nutrinordp --enable-jpeg  --enable-fuse  --enable-opus --enable-mp3lame --enable-pixman --enable-painter --enable-rfxcodec --enable-load_pulse_modules --disable-ipv6
+
+  - name: Make clean xrdp
+    make:
+      chdir: /tmp/xrdp-{{xrdp_version}}/
+      target: clean
+
+  - name: Make xrdp
+    make:
+      chdir: /tmp/xrdp-{{xrdp_version}}/
+
+  - name: Make install xrdp
+    become: true
+    make:
+      chdir: /tmp/xrdp-{{xrdp_version}}/
+      target: install
+
+  - name: Bootstrap xorgxrdp
+    shell: cd /tmp/xorgxrdp-{{xorgxrdp_version}} && ./bootstrap
+
+  - name: Configure xorgxrdp
+    shell: cd /tmp/xorgxrdp-{{xorgxrdp_version}} && ./configure
+
+  - name: Make xorgxrdp
+    make:
+      chdir: /tmp/xorgxrdp-{{xorgxrdp_version}}/
+
+  - name: Make install xorgxrdp
+    become: true
+    make:
+      chdir: /tmp/xorgxrdp-{{xorgxrdp_version}}
+      target: install
+
+  - name: Get users list
+    shell: ls -1 /home
+    register: home_dir
+
+  - name: Add line to .xsession file
+    become: true
+    lineinfile:
+      create: yes
+      state: present
+      line: xfce4-session
+      dest: /home/{{item}}/.xsession
+    with_items:
+      - "{{home_dir.stdout_lines}}"
+
+  - name: Change file owners
+    become: true
+    file:
+      path: /home/{{item}}/.xsession
+      owner: "{{item}}"
+    with_items:
+      - "{{home_dir.stdout_lines}}"
+
+  - name: Restart xrdp service
+    become: true
+    shell: /etc/xrdp/xrdp.sh restart
+
+  - name: Configure pulseaudio
+    shell: cd /tmp/pulseaudio-{{pulseaudio_version}} && ./configure
+
+  - name: Change pulse_dir makefile
+    replace:
+      path: /tmp/xrdp-{{xrdp_version}}/sesman/chansrv/pulse/Makefile
+      regexp: "^PULSE_DIR = /home/lk/pulseaudio-1\\.1"
+      replace: "PULSE_DIR = /tmp/pulseaudio-{{pulseaudio_version}}"
+
+  - name: Change CFLAGS  makefile
+    replace:
+      path: /tmp/xrdp-{{xrdp_version}}/sesman/chansrv/pulse/Makefile
+      regexp: "^CFLAGS.*$"
+      replace: "CFLAGS    = -Wall -O2 -I$(PULSE_DIR) -I$(PULSE_DIR)/src -DHAVE_CONFIG_H -fPIC -DXRDP_SOCKET_PATH=\\\"/tmp/.xrdp\\\""
+
+  - name: Make clean pulseaudio
+    make:
+      chdir: /tmp/xrdp-{{xrdp_version}}/sesman/chansrv/pulse/
+      target: clean
+
+  - name: Make pulseaudio
+    make:
+      chdir: /tmp/xrdp-{{xrdp_version}}/sesman/chansrv/pulse/
+
+  - name: Copy modules
+    become: true
+    copy:
+      src: "{{item}}"
+      dest: /usr/lib/pulse-8.0/modules/.
+    with_fileglob:
+      - "/tmp/xrdp-{{xrdp_version}}/sesman/chansrv/pulse/*.so"
+
+  - name: Link xrdp
+    become: true
+    file:
+      src: /usr/local/sbin/xrdp
+      path: /usr/sbin/xrdp
+      state: link
+
+  - name: Link xrdp-sesman
+    become: true
+    file:
+      src: /usr/local/sbin/xrdp-sesman
+      path: /usr/sbin/xrdp-sesman
+      state: link
+
+  - name: Link xrdp-chansrv
+    become: true
+    file:
+      src: /usr/local/sbin/xrdp-chansrv
+      path: /usr/sbin/xrdp-chansrv
+      state: link
+
+  - name: Enable xrdp.service
+    become: true
+    shell: systemctl enable xrdp.service
+
+  - name: Restart xrdp service
+    become: true
+    shell: /etc/xrdp/xrdp.sh restart
