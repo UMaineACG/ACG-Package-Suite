@@ -12,9 +12,11 @@
       path: /etc/locale.gen
       line: "en_US.UTF-8 UTF-8"
       state: present
+    when: ansible_distribution == 'Ubuntu'
 
   - name: Run locale-gen
     shell: locale-gen
+    when: ansible_distribution == 'Ubuntu'
 
   - name: Set timezone
     become: true
@@ -25,12 +27,14 @@
     apt:
       name: aptitude
       state: present
+    when: ansible_distribution == 'Ubuntu'
 
   - name: Update and upgrade
     become: true
     apt:
       update_cache: true
       upgrade: yes
+    when: ansible_distribution == 'Ubuntu'
 
   - name: Install xfce-core
     block:
@@ -39,12 +43,29 @@
         apt:
           name: xubuntu-core
           state: present
+        when: ansible_distribution == 'Ubuntu'
     rescue:
       - name: Retry install xfce-core
         become: true
         apt:
           name: xubuntu-core
           state: present
+        when: ansible_distribution == 'Ubuntu'
+
+  - name: Install xfce-core
+    become: true
+    shell: yum groupinstall "Server with GUI" -y
+    when: ansible_distribution == 'CentOS'
+
+  - name: Install Desktop
+    become: true
+    shell: yum groupinstall "Xfce" -y
+    when: ansible_distribution == 'CentOS'
+
+  - name: Install udev
+    become: true
+    shell: yum-builddep libgudev1-devel -y
+    when: ansible_distribution == 'CentOS'
 
   - name: Install manpages
     become: true
@@ -59,6 +80,7 @@
       - manpages-posix
       - manpages-posix-dev
       - asr-manpages
+    when: ansible_distribution == 'Ubuntu'
 
   - name: Install other libraries
     become: true
@@ -71,6 +93,19 @@
       - libappindicator1
       - libindicator7
       - firefox
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: Install other libraries
+    become: true
+    yum: name={{item}} state=present
+    with_items:
+      - Xvfb
+      - python-psutil
+      - libXScrnSaver.x86_64
+      - libappindicator.x86_64
+      - libindicator.x86_64
+      - firefox
+    when: ansible_distribution == 'CentOS'
 
   - name: Clean up extra stuff
     become: true
@@ -81,11 +116,24 @@
       - xscreensaver
       - abiword
       - gnumeric
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: Clean up extra stuff
+    become: true
+    yum: name={{item}} state=absent
+    with_items:
+      - light-locker
+      - gnome-screensaver
+      - xscreensaver
+      - abiword
+      - gnumeric
+    when: ansible_distribution == 'CentOS'
 
   - name: More cleanup
     become: true
     apt:
       autoremove: yes
+    when: ansible_distribution == 'Ubuntu'
 
   - name: Install basic tools
     become: true
@@ -100,6 +148,21 @@
       - pkg-config
       - make
       - fakeroot
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: Install basic tools
+    become: true
+    yum: name={{item}} state=present
+    with_items:
+      - git
+      - nasm
+      - bison
+      - flex
+      - autoconf
+      - libtool
+      - make
+      - fakeroot
+    when: ansible_distribution == 'CentOS'
 
   - name: build dependencies for  development libraries
     become: true
@@ -123,6 +186,39 @@
       - libpulse-dev
       - xserver-xorg-dev
       - pulseaudio
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: build dependencies for  development libraries
+    become: true
+    yum: name={{item}} state=present
+    with_items:
+      - libX11-devel
+      - dpkg-devel
+      - libavc1394-devel
+      - libxml2-devel
+      - openssl-devel
+      - fuse-devel
+      - opus-devel
+      - lame-libs
+      - lame-devel
+      - libfli-devel
+      - libxml2-devel
+      - libXrandr-devel
+      - openssl-libs
+      - pam-devel
+      - libXfixes-devel
+      - libjpeg-devel
+      - pulseaudio-libs-devel
+      - xorg-x11-server-devel
+      - libtool-ltdl-devel
+      - json-c-devel
+      - libsndfile-devel
+      - dbus-devel
+      - speex-devel
+      - libgudev1-devel
+      - glib-devel
+      - pulseaudio
+    when: ansible_distribution == 'CentOS'
 
   - name: Install development libraries
     become: true
@@ -144,6 +240,7 @@
       - xutils-dev
       - libpulse-dev
       - xserver-xorg-dev
+    when: ansible_distribution == 'Ubuntu'
 
   - name: Install everything else
     become: true
@@ -154,6 +251,15 @@
       - python-libxml2
       - xutils
       - xfce4
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: Install everything else
+    become: true
+    yum: name={{item}} state=present
+    with_items:
+      - intltool
+      - libxslt
+    when: ansible_distribution == 'CentOS'
 
   - name: Fix dixfont.h
     become: true
@@ -164,6 +270,19 @@
 
   - name: Get pulseaudio source
     shell: cd /tmp && apt-get source -y pulseaudio
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: Get pulseaudio source
+    get_url:
+      url: https://freedesktop.org/software/pulseaudio/releases/pulseaudio-6.0.tar.gz
+      dest: /tmp
+    when: ansible_distribution == 'CentOS'
+
+  - name: Unzip pulseaudio
+    unarchive:
+      src: /tmp/pulseaudio-6.0.tar.gz
+      dest: /tmp/
+    when: ansible_distribution == 'CentOS'
 
   - name: Download xrdp
     get_url:
@@ -211,6 +330,11 @@
 
   - name: Configure xorgxrdp
     shell: cd /tmp/xorgxrdp-{{xorgxrdp_version}} && ./configure
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: Configure xorgxrdp
+    shell: 'cd /tmp/xorgxrdp-{{xorgxrdp_version}} && ./configure XRDP_CFLAGS=-I/tmp/xrdp-{{xrdp_version}}/common XRDP_LIBS=" "'
+    when: ansible_distribution == 'CentOS'
 
   - name: Make xorgxrdp
     make:
@@ -225,6 +349,12 @@
   - name: Get users list
     shell: ls -1 /home
     register: home_dir
+
+  - name: Delete noah
+    become: true
+    file:
+      path: /home/noah
+      state: absent
 
   - name: Add line to .xsession file
     become: true
@@ -250,12 +380,25 @@
 
   - name: Configure pulseaudio
     shell: cd /tmp/pulseaudio-{{pulseaudio_version}} && ./configure
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: Configure pulseaudio
+    shell: cd /tmp/pulseaudio-6.0 && ./configure --without-caps
+    when: ansible_distribution == 'CentOS'
 
   - name: Change pulse_dir makefile
     replace:
       path: /tmp/xrdp-{{xrdp_version}}/sesman/chansrv/pulse/Makefile
       regexp: "^PULSE_DIR = /home/lk/pulseaudio-1\\.1"
       replace: "PULSE_DIR = /tmp/pulseaudio-{{pulseaudio_version}}"
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: Change pulse_dir makefile
+    replace:
+      path: /tmp/xrdp-{{xrdp_version}}/sesman/chansrv/pulse/Makefile
+      regexp: "^PULSE_DIR = /home/lk/pulseaudio-1\\.1"
+      replace: "PULSE_DIR = /tmp/pulseaudio-6.0"
+    when: ansible_distribution == 'CentOS'
 
   - name: Change CFLAGS  makefile
     replace:
@@ -276,9 +419,19 @@
     become: true
     copy:
       src: "{{item}}"
-      dest: /usr/lib/pulse-8.0/modules/.
+      dest: /usr/lib/pulse-{{pulseaudio_version}}/modules/.
     with_fileglob:
       - "/tmp/xrdp-{{xrdp_version}}/sesman/chansrv/pulse/*.so"
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: Copy modules
+    become: true
+    copy:
+      src: "{{item}}"
+      dest: /usr/lib64/pulse-6.0/modules/.
+    with_fileglob:
+      - "/tmp/xrdp-{{xrdp_version}}/sesman/chansrv/pulse/*.so"
+    when: ansible_distribution == 'CentOS'
 
   - name: Link xrdp
     become: true
