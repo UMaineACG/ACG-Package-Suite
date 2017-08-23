@@ -1,0 +1,71 @@
+---
+# don't forget export ANSIBLE_ASK_SUDO_PASS=True
+# based on http://mooseframework.org/getting-started/ubuntu-1204/
+- hosts: localhost
+  tasks:  
+  - name: Install necessary packages
+    apt: name={{item}} state=present
+    become: yes
+    with_items:
+       - build-essential 
+       - gfortran 
+       - tcl 
+       - git 
+       - m4 
+       - freeglut3 
+       - doxygen 
+       - libblas-dev 
+       - liblapack-dev 
+       - libx11-dev 
+       - libnuma-dev 
+       - zlib1g-dev 
+       - libhwloc-dev
+
+  - name: Install Moose framework
+    apt:
+       deb: http://mooseframework.org/static/media/uploads/files/moose-environment-29_Ubuntu-16.04_x86_64.deb
+    become: yes
+
+  - name: get user list
+    shell: ls -1 /home
+    register: users
+
+  - name: add to .bashrc
+#     debug:
+#      msg: "{{ item }}"
+    blockinfile:
+       block: |
+               # Source MOOSE Environment
+               if [ -f /opt/moose/environments/moose_profile ]; then
+               . /opt/moose/environments/moose_profile
+               fi
+       state: present
+       create: yes
+       path: "~/.bashrc"
+#       path: "/home/{{ item }}/.bashrc"
+#    with_items: "{{ users.stdout_lines }}"
+
+  - name: install moose in the users directory
+
+    file:
+       path: "~/projects"
+#       path: "/home/{{ item }}/projects"
+       state: directory
+#    with_items: "{{ users.stdout_lines}}"
+
+
+  - name: Git stuff
+    git:
+       repo: https://github.com/idaholab/moose.git
+       clone: yes
+       version: master
+       dest: ~/projects/moose
+
+  - name: Compile libMesh
+    shell: ~/projects/moose/scripts/update_and_rebuild_libmesh.sh
+
+  - name: make tests
+    make:
+       chdir: ~/projects/moose/test
+       target: "-j8"
+
