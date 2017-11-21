@@ -1,7 +1,0 @@
-USB IP CLIENT SETUP GUIDE
-
-1. Run the USB IP client enabler script located in this folder.
-2. Run "usbip -l x" where x is the IP address of the USB IP server.
-3. Run "usbip -a x y" where x is the IP address of the USB IP server and y is
-the busid of the device you want to attach.
-4. Run "lsusb" to verify that the USB device is listed.
