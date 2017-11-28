@@ -1,0 +1,75 @@
+---
+- hosts: localhost
+  vars:
+    vm_ip: "{{ip}}"
+  tasks:
+
+  - name: Install autossh
+    become: true
+    apt:
+      name: autossh
+      state: present
+
+  - name: Create ssh tunnel service file
+    become: true
+    file:
+      src: /etc/systemd/system/ssh_tunnel.service
+      state: touch
+
+  - name: Create usbip tunnel service file
+    become: true
+    file:
+      src: /etc/systemd/system/usbip_tunnel.service
+      state: touch
+
+  - name: Update ssh tunnel service file
+    become: true
+    blockinfile:
+      path: /etc/systemd/system/ssh_tunnel.service
+      state: present
+      block: |
+		[Unit]
+		Description=Forwards Pi ssh to remote host
+		Wants=network-online.target
+		After=network-online.target
+
+		[Service]
+		User=pi
+		ExecStart=/usr/bin/autossh -M 0 -q -N -o "ServerAliveInterval 60" -o "ServerAliveCountMax 3" temp@192.168.0.{{ip}} -R 9000:localhost:22
+
+		[Install]
+		WantedBy=multi-user.target
+
+  - name: Update usbip tunnel service file
+    become: true
+    blockinfile:
+      path: /etc/systemd/system/usbip_tunnel.service
+      state: present
+      block: |
+		[Unit]
+		Description=Forwards Pi ssh to remote host
+		Wants=network-online.target
+		After=network-online.target
+
+		[Service]
+		User=pi
+		ExecStart=/usr/bin/autossh -M 0 -q -N -o "ServerAliveInterval 60" -o "ServerAliveCountMax 3" vm@ip -R 3240:localhost:3240
+
+		[Install]
+		WantedBy=multi-user.target
+
+  - name: Enable ssh tunnel
+    become: true
+    shell: systemctl enable ssh_tunnel.service
+
+  - name: Enable usbip tunnel
+    become: true
+    shell: systemctl enable usbip_tunnel.service
+
+  - name: Restart ssh tunnel service
+    become: true
+    shell: systemctl restart ssh_tunnel.service 
+
+  - name: Restart usbip tunnel service
+    become: true
+    shell: systemctl restart usbip_tunnel.service
