@@ -28,6 +28,7 @@
       path: /etc/systemd/system/ssh_tunnel.service
       state: present
       block: |
+        fakeline
         [Unit]
         Description=Forwards Pi ssh to remote host
         Wants=network-online.target
@@ -46,6 +47,7 @@
       path: /etc/systemd/system/usbip_tunnel.service
       state: present
       block: |
+        fakeline
         [Unit]
         Description=Forwards Pi ssh to remote host
         Wants=network-online.target
@@ -57,6 +59,48 @@
 
         [Install]
         WantedBy=multi-user.target
+
+  - name: Remove unwanted lines from ssh_tunnel.service
+    become: true
+    block:
+      - name: Remove \# BEGIN ANSIBLE MANAGED BLOCK
+        lineinfile:
+          path: /etc/systemd/system/ssh_tunnel.service
+          state: absent
+          line: "# BEGIN ANSIBLE MANAGED BLOCK"
+
+      - name: Remove \# END ANSIBLE MANAGED BLOCK
+        lineinfile:
+          path: /etc/systemd/system/ssh_tunnel.service
+          state: absent
+          line: "# END ANSIBLE MANAGED BLOCK"
+
+      - name: Remove fakeline
+        lineinfile:
+          path: /etc/systemd/system/ssh_tunnel.service
+          state: absent
+          line: fakeline
+
+  - name: Remove unwanted lines from usbip_tunnel.service
+    become: true
+    block:
+      - name: Remove \# BEGIN ANSIBLE MANAGED BLOCK
+        lineinfile:
+          path: /etc/systemd/system/usbip_tunnel.service
+          state: absent
+          line: "# BEGIN ANSIBLE MANAGED BLOCK"
+
+      - name: Remove \# END ANSIBLE MANAGED BLOCK
+        lineinfile:
+          path: /etc/systemd/system/usbip_tunnel.service
+          state: absent
+          line: "# END ANSIBLE MANAGED BLOCK"
+
+      - name: Remove fakeline
+        lineinfile:
+          path: /etc/systemd/system/usbip_tunnel.service
+          state: absent
+          line: fakeline
 
   - name: Enable ssh tunnel
     become: true
