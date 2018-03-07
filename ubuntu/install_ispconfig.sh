@@ -6,4 +6,4 @@ cd /tmp
 wget --no-check-certificate https://github.com/servisys/ispconfig_setup/archive/master.zip
 unzip master.zip
 cd ispconfig_setup-master/
-./install.sh
+sudo ./install.sh
