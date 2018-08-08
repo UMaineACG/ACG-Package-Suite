@@ -30,12 +30,6 @@ for SCRIPT in *.sh
 done
 echo "0 0 * * * /usr/local/bin/ACG-Package-Suite/update_suite.sh" | sudo crontab -
 
-# Add in a default user and ssh key
-printf "user\nacgrocks" | /usr/local/bin/ACG-Package-Suite/$user_to_change_pw/add_a_user.sh
-sudo mkdir /home/user/.ssh
-sudo mv /home/$user_to_change_pw/.ssh/authorized_keys /home/user/.ssh
-sudo chmod 600 /home/user/.ssh/authorized_keys
-sudo chown -R user /home/user
 
 # Delete the default ubuntu user
 if [ "$OS" == "Ubuntu" ]; then
@@ -51,14 +45,6 @@ export PASSWORD=$(date +%s | sha256sum | base32 | head -c 8 ; echo)
 echo "acg:$PASSWORD" | sudo chpasswd
 echo "Password for acg has been set to $PASSWORD"
 
-# Modify rc.local to randomize acg password with each boot
-# (and print to log)
-
-# delete the last line (exit(0))
-sudo sed -i '$ d' /etc/rc.local
-
-echo "export PASSWORD=\$(date +%s | sha256sum | base32 | head -c 8 ; echo)" |sudo tee -a /etc/rc.local
-echo "echo \"acg:\$PASSWORD\" | sudo chpasswd" |sudo tee -a /etc/rc.local
-echo "echo \"Password for acg has been set to \$PASSWORD\"" |sudo tee -a /etc/rc.local
-echo "exit 0" |sudo tee -a /etc/rc.local
+cp /usr/local/bin/ACG-Package-Suite/ubuntu/services/acg_password_change.service /etc/systemd/system
+systemctl enable acg_password_change.service
 
