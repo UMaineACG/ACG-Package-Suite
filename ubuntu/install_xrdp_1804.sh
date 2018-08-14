@@ -137,7 +137,7 @@ echo
 # based on http://c-nergy.be/blog/?p=12469
 echo "Adding sound support"
 
-sudo apt-get install xrdp-pulseaudio-installer
+sudo apt-get install -y  xrdp-pulseaudio-installer
 cd /tmp
 sudo apt source pulseaudio
 cd -
@@ -146,6 +146,7 @@ sudo ./configure
 cd -
 
 cd /usr/src/xrdp-pulseaudio-installer
+sudo make PULSE_DIR="/tmp/pulseaudio-11.1"
 sudo make PULSE_DIR="/tmp/pulseaudio-11.1"
 sudo install -t "/var/lib/xrdp-pulseaudio-installer" -D -m 644 *.so
 cd -
