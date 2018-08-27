@@ -133,10 +133,10 @@ echo
 
 echo
 
-sudo sudo mv /etc/xrdp/startwm.sh /etc/xrdp/startwm.sh_original
-sudo echo '#!/bin/sh' | sudo tee>>/etc/xrdp/startwm.sh
-sudo echo '. /etc/environment' sudo tee >> /etc/xrdp/startwm.sh
-sudo cat /etc/xrdp/startwm.sh_original sudo tee >>/ect/xrdp/startwm.sh
+sudo mv /etc/xrdp/startwm.sh /etc/xrdp/startwm.sh_original
+echo '#!/bin/sh' | sudo tee >> /etc/xrdp/startwm.sh
+echo '. /etc/environment' sudo tee >> /etc/xrdp/startwm.sh
+cat /etc/xrdp/startwm.sh_original | sudo tee >>/ect/xrdp/startwm.sh
 
 # sound stuff
 # based on http://c-nergy.be/blog/?p=12469
