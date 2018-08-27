@@ -135,8 +135,8 @@ echo
 
 sudo mv /etc/xrdp/startwm.sh /etc/xrdp/startwm.sh_original
 echo '#!/bin/sh' | sudo tee  /etc/xrdp/startwm.sh
-echo '. /etc/environment' sudo tee -a /etc/xrdp/startwm.sh
-cat /etc/xrdp/startwm.sh_original | sudo tee -a /ect/xrdp/startwm.sh
+echo '. /etc/environment' | sudo tee -a /etc/xrdp/startwm.sh
+cat /etc/xrdp/startwm.sh_original | sudo tee -a /etc/xrdp/startwm.sh
 
 # sound stuff
 # based on http://c-nergy.be/blog/?p=12469
