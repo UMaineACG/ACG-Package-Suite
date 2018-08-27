@@ -146,7 +146,7 @@ sudo apt-get install -y  xrdp-pulseaudio-installer
 cd /tmp
 sudo apt source pulseaudio
 cd -
-cd /tmp/pulseaudio*
+cd /tmp/pulseaudio-11.1
 sudo ./configure
 cd -
 
