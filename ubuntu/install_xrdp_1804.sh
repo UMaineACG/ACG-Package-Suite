@@ -134,9 +134,10 @@ echo
 echo
 
 sudo mv /etc/xrdp/startwm.sh /etc/xrdp/startwm.sh_original
-sudo echo '#!/bin/sh' >>/etc/xrdp/startwm.sh
-sudo echo '. /etc/environment' >> /etc/xrdp/startwm.sh
-sudo cat /etc/xrdp/startwm.sh_original >>/ect/xrdp/startwm.sh
+echo '#!/bin/sh' | sudo tee  /etc/xrdp/startwm.sh
+echo '. /etc/environment' | sudo tee -a /etc/xrdp/startwm.sh
+cat /etc/xrdp/startwm.sh_original | sudo tee -a /etc/xrdp/startwm.sh
+sudo chmod 755 /etc/xrdp/startwm.sh
 
 # sound stuff
 # based on http://c-nergy.be/blog/?p=12469
@@ -146,7 +147,7 @@ sudo apt-get install -y  xrdp-pulseaudio-installer
 cd /tmp
 sudo apt source pulseaudio
 cd -
-cd /tmp/pulseaudio*
+cd /tmp/pulseaudio-11.1
 sudo ./configure
 cd -
 
