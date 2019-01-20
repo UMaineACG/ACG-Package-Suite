@@ -60,7 +60,7 @@ else
     do
         read -s -p "Enter the openstack password for the openstack user" openstackpassword
         echo
-        read -s -p "Confirm Guacamole User Database Password: " password2
+        read -s -p "Confirm openstack user Password: " password2
         echo
         [ "$openstackpassword" = "$password2" ] && break
         echo "Passwords don't match. Please try again."
@@ -154,4 +154,5 @@ echo "Log in to openstack and download the RC file for the project"
 echo "go to project->access and security->API access"
 echo "and click Download OpenStack RC file"
 read -rsp $'Press any key to continue...\n' -n1 key
+firefox http://openstack.acg.maine.edu
 sudo cp ~/Downloads/*openrc.sh /etc/auto_guac/Openstack_shell_scripts/.
