@@ -93,8 +93,8 @@ sudo docker run --restart=always --detach --name=mysql --env="MYSQL_ROOT_PASSWOR
 #echo "Waiting 30 seconds for MySQL to load"
 #sleep 30
 # just do other stuff
-sudo apt-get install python-openstackclient
-sudo apt-get install python-pip
+sudo apt-get install -y python-openstackclient
+sudo apt-get install -y python-pip
 sudo python -m pip install mysql-connector-python
 
 # Create the Guacamole database and the user account
@@ -118,7 +118,7 @@ cd -
 sudo mkdir /etc/auto_guac
 cd /etc/auto_guac
 sudo git clone https://github.com/segee/auto_guac
-sudo git clone https://gogs.acg.maine.edu/Openstack_shell_scripts
+sudo git clone https://gogs.acg.maine.edu/segee/Openstack_shell_scripts
 cd -
 cd /etc/auto_guac/Openstack_shell_scripts
 echo "echo $openstackpassword > my_password" | sudo bash
@@ -127,6 +127,7 @@ cd -
 
 sudo cp /etc/auto_guac/auto_guac/auto_guac_for_docker.service /etc/systemd/system/.
 sudo systemctl enable auto_guac_for_docker.service
+
 echo 
 echo
 echo
