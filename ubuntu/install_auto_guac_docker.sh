@@ -109,6 +109,14 @@ flush privileges;"
 echo $SQLCODE | mysql -h 127.0.0.1 -P 3306 -u root -p$mysqlrootpassword
 
 cat guacamole-auth-jdbc-${GUACVERSION}/mysql/schema/*.sql | mysql -u root -p$mysqlrootpassword -h 127.0.0.1 -P 3306 guacamole_db
+SQLCODE="
+replace into guacamole_connection(connection_id, connection_name, protocol) values(1,'guacamole_server','rdp');
+replace into guacamole_connection_permission(entity_id,connection_id,permission) values(1,1,'READ'),values(1,1,'WRITE'),values(1,1,'DELETE'),values(1,1,'ADMINISTER');
+replace into guacamole_connection_parameter(connection_id,parameter_name,parameter_value) values(1,'console-audio','true'),(1,'172.17.0.1','$temp2'),(1,'port','3389');
+"
+# Execute SQL Code
+echo $SQLCODE | mysql -h 127.0.0.1 -P 3306 -u root -p$mysqlrootpassword
+
 
 sudo docker run --restart=always --name guacd -d guacamole/guacd
 sudo docker run --restart=always --name guacamole  --link mysql:mysql --link guacd:guacd -e MYSQL_HOSTNAME=127.0.0.1 -e MYSQL_DATABASE=guacamole_db -e MYSQL_USER=guacamole_user -e MYSQL_PASSWORD=$guacdbuserpassword --detach -p 8080:8080 guacamole/guacamole
