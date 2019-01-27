@@ -113,7 +113,7 @@ SQLCODE="
 use guacamole_db;
 replace into guacamole_connection(connection_id, connection_name, protocol) values(1,'guacamole_server','rdp');
 replace into guacamole_connection_permission(entity_id,connection_id,permission) values(1,1,'READ'),values(1,1,'WRITE'),values(1,1,'DELETE'),values(1,1,'ADMINISTER');
-replace into guacamole_connection_parameter(connection_id,parameter_name,parameter_value) values(1,'console-audio','true'),(1,'172.17.0.1','$temp2'),(1,'port','3389');
+replace into guacamole_connection_parameter(connection_id,parameter_name,parameter_value) values(1,'console-audio','true'),(1,'hostname','172.17.0.1'),(1,'port','3389');
 "
 # Execute SQL Code
 echo $SQLCODE | mysql -h 127.0.0.1 -P 3306 -u root -p$mysqlrootpassword
