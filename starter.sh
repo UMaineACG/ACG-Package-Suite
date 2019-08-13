@@ -41,7 +41,7 @@ else
   userdel --remove $user_to_change_pw
 fi
 printf "acg\nacgrocks" | /usr/local/bin/ACG-Package-Suite/$user_to_change_pw/add_a_user.sh
-export PASSWORD=$(date +%s | sha256sum | base32 | head -c 8 ; echo)
+export PASSWORD=$(date +%s | sha256sum | base64 | head -c 8 ; echo)
 echo "acg:$PASSWORD" | sudo chpasswd
 echo "Password for acg has been set to $PASSWORD"
 
