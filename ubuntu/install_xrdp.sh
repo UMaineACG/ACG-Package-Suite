@@ -1,8 +1,18 @@
 #!/bin/bash
-# Makes xrdp from source
-sudo apt-get update
-sudo apt-get install software-properties-common -y
-sudo apt-add-repository ppa:ansible/ansible -y
-sudo apt-get update
-sudo apt-get install ansible -y
-ansible-playbook /usr/local/bin/ACG-Package-Suite/ubuntu/playbooks/install_xrdp.yml --ask-sudo-pass
+# this is a wrapper for an xrdp install script by Griffon
+# there have been multiple versions and they are quite thorough
+# it is worth checking here:
+# http://www.c-nergy.be/products.html
+
+mkdir /tmp/installxrdp
+cd /tmp/installxrdp
+
+
+curl http://www.c-nergy.be/downloads/xrdp-installer-1.2.zip --output xrdp.zip
+unzip xrdp.zip 
+chmod +x xrdp-installer-1.2.sh 
+./xrdp-installer-1.2.sh -s
+
+cd /tmp/installxrdp
+rm *
+
