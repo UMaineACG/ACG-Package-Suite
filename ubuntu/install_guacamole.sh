@@ -1,59 +1,64 @@
-#/bin/bash
-echo “This command must be run as root in order to work properly”
-read -p "Is this command being run as root? (y/n) " -n 1 -r
-echo    # (optional) move to a new line
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-        echo "Command needs to be run as root"
-        [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
-fi
+#!/bin/bash
+echo
+    while true
+    do
+        read -s -p "Enter a MySQL ROOT Password: " mysqlrootpassword
+        echo
+        read -s -p "Confirm MySQL ROOT Password: " password2
+        echo
+        [ "$mysqlrootpassword" = "$password2" ] && break
+        echo "Passwords don't match. Please try again."
+        echo
+    done
+    echo
+    while true
+    do
+        read -s -p "Enter a Guacamole User Database Password: " guacdbuserpassword
+        echo
+        read -s -p "Confirm Guacamole User Database Password: " password2
+        echo
+        [ "$guacdbuserpassword" = "$password2" ] && break
+        echo "Passwords don't match. Please try again."
+        echo
+    done
+    echo
 
-sudo apt-get update
-wait
-sudo apt-get upgrade -y
-wait
-# Install guacamole dependencies
-sudo apt-get install libcairo2-dev libpng12-dev libossp-uuid-dev libavcodec-dev libavutil-dev libswscale-dev libfreerdp-dev libpango1.0-dev libssh2-1-dev libtelnet-dev libvncserver-dev libpulse-dev libssl-dev libvorbis-dev libwebp-dev libjpeg-dev libjpeg8-dev libjpeg-turbo8-dev tomcat8 x11vnc -y
-wait
-# Download and extract server files
-sudo wget -O /tmp/guacamole-server-0.9.12-incubating.tar.gz http://download.nextag.com/apache/incubator/guacamole/0.9.12-incubating/source/guacamole-server-0.9.12-incubating.tar.gz
-wait
-sudo tar -zxvf /tmp/guacamole-server-0.9.12-incubating.tar.gz -C /tmp/.
-wait
-# Configure and make the guacamole server
-cd /tmp/guacamole-server-0.9.12-incubating && sudo ./configure --with-init-dir=/etc/init.d
-sudo make -C /tmp/guacamole-server-0.9.12-incubating/.
-wait
-cd /tmp/guacamole-server-0.9.12-incubating && sudo make install
-sudo ldconfig
-wait
+sudo apt-get -y install docker.io mysql-client wget
+mkdir /tmp/guacamole
+cd /tmp/guacamole
+# sudo ufw disable
+wget https://raw.githubusercontent.com/MysticRyuujin/guac-install/master/docker-install.sh
+chmod +x docker-install.sh
+sed -i 's/sleep 30/sleep 90/' docker-install.sh
+sudo ./docker-install.sh -m "$mysqlrootpassword" -g "$guacdbuserpassword" 
 
-# Download guacamole web application file
-sudo wget -O /var/lib/tomcat8/webapps/guacamole.war http://mirrors.sonic.net/apache/incubator/guacamole/0.9.12-incubating/source/guacamole-client-0.9.12-incubating.tar.gz
-wait
-# make required directories
-sudo mkdir /etc/guacamole
-sudo mkdir /usr/share/tomcat8/.guacamole
-# make guacamole.properties file and fill it with correct information
-sudo cat > /etc/guacamole/guacamole.properties << EOF
-guacd-hostname: localhost
-guacd-port:    4822
-user-mapping:    /etc/guacamole/user-mapping.xml
-auth-provider:    net.sourceforge.guacamole.net.basic.BasicFileAuthenticationProvider
-basic-user-mapping:    /etc/guacamole/user-mapping.xml
-EOF
-# make required links for guacamole.properties and guacamole.war
-sudo ln -s /etc/guacamole/guacamole.properties /usr/share/tomcat8/.guacamole
-sudo mkdir /var/lib/guacamole
-sudo ln -s /var/lib/tomcat8/webapps/guacamole.war /var/lib/guacamole/guacamole.war
-# make empty user-mapping.xml file
-# give files required permissions and change owner to tomcat8
-sudo touch /etc/guacamole/user-mapping.xml && sudo chmod 600 /etc/guacamole/user-mapping.xml && sudo chown tomcat8:tomcat8 /etc/guacamole/user-mapping.xml
+# add a connection to this machine
+SQLCODE="
+use guacamole_db;
+replace into guacamole_connection(connection_id, connection_name, protocol) values(1,'guacamole_server','rdp');
+replace into guacamole_connection_permission(entity_id,connection_id,permission) values(1,1,'READ'),(1,1,'UPDATE'),(1,1,'DELETE'),(1,1,'ADMINISTER');
+replace into guacamole_connection_parameter(connection_id,parameter_name,parameter_value) values(1,'console-audio','true'),(1,'hostname','172.17.0.1'),(1,'port','3389'),(1,'ignore-cert','true');
+"
+# Execute SQL Code
+echo $SQLCODE | mysql -h 127.0.0.1 -P 3306 -u root -p$mysqlrootpassword
 
-# start tomcat8 and guacamole
-sudo service tomcat8 start
-wait
-# add guacamole to start on boot
-sudo systemctl enable guacd.service
-wait
-sudo systemctl start guacd.service
+
+
+echo
+echo
+echo
+echo "This is very important, we are almost done."
+echo "but not quite."
+echo "A web browser will launch and take you to the"
+echo "guacamole instance you just installed"
+echo
+echo "please log in with the default credentials"
+echo "guacadmin guacadmin"
+echo "and change the password"
+echo "feel free to add a user account for yourself as well"
+echo
+echo
+echo "CLOSE THE BROWSER WHEN DONE"
+read -rsp $'Press any key to continue...\n' -n1 key
+firefox http://localhost:8080/guacamole
+
