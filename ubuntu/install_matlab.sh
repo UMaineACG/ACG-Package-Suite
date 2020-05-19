@@ -56,10 +56,17 @@ echo "Press enter to continue"
 check_for_key
 mkdir /tmp/matlab
 unzip ~/Downloads/matlab*.zip -d /tmp/matlab
+xhost +
 sudo /tmp/matlab/install
 rm -f ~/Downloads/matlab*.zip
 rm -rf /tmp/matlab
 rmdir /tmp/matlab
 sudo apt-get update
+
+echo "The next step will ask where Matlab is installed. Answer:"
+echo "/usr/local"
+echo "Press enter to continue"
+check_for_key
+
 sudo apt-get install -y -f  matlab-support
 echo "Done"
