@@ -32,6 +32,8 @@ chmod +x docker-install.sh
 sed -i 's/sleep 30/sleep 90/' docker-install.sh
 sudo ./docker-install.sh -m "$mysqlrootpassword" -g "$guacdbuserpassword" 
 
+sudo systemctl enable --now docker.service
+
 # add a connection to this machine
 SQLCODE="
 use guacamole_db;
