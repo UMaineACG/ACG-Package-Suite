@@ -32,6 +32,67 @@ chmod +x docker-install.sh
 sed -i 's/sleep 30/sleep 90/' docker-install.sh
 sudo ./docker-install.sh -m "$mysqlrootpassword" -g "$guacdbuserpassword" 
 
+##############################################
+# Setup nginx with a self signed certificate #
+##############################################
+# create the nginx configuration directory structure in the local users home config directory
+CONFIG_DIR=~/.config/ACG/nginx
+# make the directory and sub-directories if necessary
+if [ ! -d $CONFIG_DIR/certs ]
+then
+	mkdir -p $CONFIG_DIR/certs
+fi
+
+# configure nginx with https as a reverse proxy and make guacamole available at the base address and /guacamole
+NGINX_CONFIG='server {
+	listen 80 default_server;
+	server_name _;
+	return 301 https://$host$request_uri;
+}
+
+server {
+
+	listen 443 ssl default_server;
+	listen [::]:443 ssl default_server;
+
+	ssl_certificate /etc/nginx/conf.d/certs/server.crt;
+	ssl_certificate_key /etc/nginx/conf.d/certs/server.key;
+
+	location /guacamole {
+		proxy_pass http://guacamole:8080/guacamole/;
+		proxy_buffering off;
+		proxy_http_version 1.1;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection $http_connection;
+		access_log off;
+	}
+
+	location / {
+		proxy_pass http://guacamole:8080/guacamole/;
+		proxy_buffering off;
+		proxy_http_version 1.1;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection $http_connection;
+		proxy_cookie_path /guacamole/ /;
+		access_log off;
+	}
+
+}'
+
+echo -e "$NGINX_CONFIG" > $CONFIG_DIR/default.conf
+
+# find the external IP address to generate the 1 year self signed SSL cert and place it in the configuration directory structure
+EXTERNAL_IP=$(wget http://ipinfo.io/ip -qO -); 
+openssl req -newkey rsa:2048 -nodes -keyout $CONFIG_DIR/certs/server.key -x509 -days 365 -out $CONFIG_DIR/certs/server.crt -subj "/C=US/ST=ME/L=Orono/O=Univserity of Maine System/OU=Advanced Computing Group/CN=$EXTERNAL_IP"
+
+# start up the nginx container with 
+#    ports 80 and 443 bound to the host ports
+#    mounted with the configuration directory created above
+#    linked to the guacamole container
+sudo docker run --restart=always --name nginx-ssl -p 80:80 -p 443:443 -v $CONFIG_DIR:/etc/nginx/conf.d  --link guacamole:guacamole -d nginx
+
 sudo systemctl enable --now docker.service
 
 # add a connection to this machine
