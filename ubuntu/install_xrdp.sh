@@ -16,4 +16,4 @@ sed -i 's/be.archive/archive/' xrdp-installer-1.2.sh
 
 cd /tmp/installxrdp
 rm *
-
+echo "pulseaudio -k" |sudo tee -a /etc/profile
