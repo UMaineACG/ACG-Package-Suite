@@ -2,9 +2,12 @@
 #Desktop Environment
 ###################################################################
 # 
-# Install ubuntu 1804 desktop
+# Install ubuntu desktop
 #
 ###################################################################
+sudo apt-get install python3-pip
+sudo pip3 install apt-mirror-updater
+apt-mirror-updater -a
 
 echo "en_US.UTF-8 UTF-8" | sudo tee -a /etc/locale.gen
 sudo locale-gen

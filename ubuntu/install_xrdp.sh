@@ -4,6 +4,11 @@
 # it is worth checking here:
 # http://www.c-nergy.be/products.html
 
+
+sudo apt-get install python3-pip
+sudo pip3 install apt-mirror-updater
+apt-mirror-updater -a
+
 mkdir /tmp/installxrdp
 cd /tmp/installxrdp
 
