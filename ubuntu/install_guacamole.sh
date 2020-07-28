@@ -22,6 +22,8 @@ echo
         echo
     done
     echo
+    read -s -p "Enter FQDN for SSL Certificate Generation (leave blank to use public IP): " FQDN
+    echo
 
 sudo apt-get -y install docker.io mysql-client wget
 mkdir /tmp/guacamole
@@ -30,13 +32,14 @@ cd /tmp/guacamole
 wget https://raw.githubusercontent.com/MysticRyuujin/guac-install/master/docker-install.sh
 chmod +x docker-install.sh
 sed -i 's/sleep 30/sleep 90/' docker-install.sh
+sed -i 's/Waiting 30/Waiting 90/' docker-install.sh
 sudo ./docker-install.sh -m "$mysqlrootpassword" -g "$guacdbuserpassword" 
 
 ##############################################
 # Setup nginx with a self signed certificate #
 ##############################################
 # create the nginx configuration directory structure in the local users home config directory
-CONFIG_DIR=~/.config/ACG/nginx
+CONFIG_DIR=$HOME/.config/ACG/nginx
 # make the directory and sub-directories if necessary
 if [ ! -d $CONFIG_DIR/certs ]
 then
@@ -83,9 +86,13 @@ server {
 
 echo -e "$NGINX_CONFIG" > $CONFIG_DIR/default.conf
 
-# find the external IP address to generate the 1 year self signed SSL cert and place it in the configuration directory structure
-EXTERNAL_IP=$(wget http://ipinfo.io/ip -qO -); 
-openssl req -newkey rsa:2048 -nodes -keyout $CONFIG_DIR/certs/server.key -x509 -days 365 -out $CONFIG_DIR/certs/server.crt -subj "/C=US/ST=ME/L=Orono/O=Univserity of Maine System/OU=Advanced Computing Group/CN=$EXTERNAL_IP"
+if [ -z "$FQDN" ]
+then
+	# find the external IP address to generate the 1 year self signed SSL cert and place it in the configuration directory structure
+	FQDN=$(wget http://ipinfo.io/ip -qO -); 
+fi
+
+openssl req -newkey rsa:2048 -nodes -keyout $CONFIG_DIR/certs/server.key -x509 -days 365 -out $CONFIG_DIR/certs/server.crt -subj "/C=US/ST=ME/L=Orono/O=Univserity of Maine System/OU=Advanced Computing Group/CN=$FQDN"
 
 # start up the nginx container with 
 #    ports 80 and 443 bound to the host ports
@@ -106,7 +113,6 @@ replace into guacamole_connection_parameter(connection_id,parameter_name,paramet
 echo $SQLCODE | mysql -h 127.0.0.1 -P 3306 -u root -p$mysqlrootpassword
 
 
-
 echo
 echo
 echo
@@ -120,8 +126,12 @@ echo "guacadmin guacadmin"
 echo "and change the password"
 echo "feel free to add a user account for yourself as well"
 echo
+echo "Guacamole is currently installed with a self-signed"
+echo "SSL certificate and browsers will show the connection"
+echo "as being insecure. If you need a valid certificate/FQDN"
+echo "please reach out to us at acg@maine.edu."
 echo
 echo "CLOSE THE BROWSER WHEN DONE"
 read -rsp $'Press any key to continue...\n' -n1 key
-firefox http://localhost:8080/guacamole
+firefox https://localhost
 

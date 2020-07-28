@@ -11,7 +11,7 @@ cd /tmp/installxrdp
 curl http://www.c-nergy.be/downloads/xrdp-installer-1.2.zip --output xrdp.zip
 unzip xrdp.zip 
 chmod +x xrdp-installer-1.2.sh 
-sed -i 's/be.archive/archive/' xrdp-installer-1.2.sh
+sed -i 's/be.archive/us.archive/' xrdp-installer-1.2.sh
 ./xrdp-installer-1.2.sh -s
 
 cd /tmp/installxrdp

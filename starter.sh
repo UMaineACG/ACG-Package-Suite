@@ -28,7 +28,7 @@ echo PATH=\"$PATH\" | sudo tee /etc/environment
 for SCRIPT in *.sh
    do sudo chmod 755 $SCRIPT;
 done
-echo "0 0 * * * /usr/local/bin/ACG-Package-Suite/update_suite.sh" | sudo crontab -
+echo -e "0 0 * * * /usr/local/bin/ACG-Package-Suite/update_suite.sh\n@reboot /usr/local/bin/ACG-Package-Suite/update_suite.sh &" | sudo crontab -
 
 
 # Delete the default ubuntu user
