@@ -8,6 +8,9 @@ user_to_change_pw="ubuntu"
 OS=$DISTRIB_ID
 if [ "$OS" == "Ubuntu" ]; then
   sudo apt-get update
+  sudo apt-get install -y python3-pip
+  sudo pip3 install apt-mirror-updater
+  sudo apt-mirror-updater -a
   sudo apt-get install -f -y git
   #Fix /etc/hosts entry for sudo to stop complaining
   newline="127.0.0.1 localhost $HOSTNAME"
@@ -48,3 +51,12 @@ echo "Password for acg has been set to $PASSWORD"
 cp /usr/local/bin/ACG-Package-Suite/ubuntu/services/acg_password_change.service /etc/systemd/system
 systemctl enable acg_password_change.service
 
+
+if [ $OS == "Ubuntu" ]
+then
+	sudo apt-get upgrade -y
+	sudo apt-get dist-upgrade -y
+else
+	sudo yum update
+	sudo yum upgrade
+fi
