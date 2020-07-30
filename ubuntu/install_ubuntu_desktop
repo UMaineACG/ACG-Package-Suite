@@ -27,5 +27,5 @@ sudo timedatectl set-timezone America/New_York
 echo PATH=\"$PATH\"| sudo tee /etc/environment
 
 /usr/local/bin/ACG-Package-Suite/ubuntu/install_chrome_and_remote_desktop.sh
-
+/usr/local/bin/ACG-Package-Suite/ubuntu/fix_online_accounts_2004.sh
 
