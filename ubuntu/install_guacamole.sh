@@ -33,6 +33,8 @@ wget https://raw.githubusercontent.com/MysticRyuujin/guac-install/master/docker-
 chmod +x docker-install.sh
 sed -i 's/sleep 30/sleep 90/' docker-install.sh
 sed -i 's/Waiting 30/Waiting 90/' docker-install.sh
+sed -i 's%guacamole/guacd%-v /tmp:/home guacamole/guacd%' docker-install.sh
+
 sudo ./docker-install.sh -m "$mysqlrootpassword" -g "$guacdbuserpassword" 
 
 ##############################################
