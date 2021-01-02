@@ -18,6 +18,7 @@ unzip xrdp.zip
 chmod +x xrdp-installer-1.2.1.sh 
 sed -i 's/be.archive/us.archive/' xrdp-installer-1.2.1.sh
 sed -i 's/git clone/git clone --recursive/' xrdp-installer-1.2.1.sh
+
 if [ "$1" = "-r" ] ;
 then
 	./xrdp-installer-1.2.1.sh -r
