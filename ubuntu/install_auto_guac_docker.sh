@@ -32,5 +32,5 @@ echo
 echo
 echo "Finally, to be able to access openstack to start and stop machines,"
 echo "you need to create a file called my_password in the directory"
-echo "/etc/Openstack_shell_scripts that contains your openstack password"
-echo "please chmod 000 my_password to prevent inadvertent access"
+echo "/etc/autoguac/Openstack_shell_scripts that contains your openstack"
+echo "password. Please chmod 000 my_password to prevent inadvertent access"
