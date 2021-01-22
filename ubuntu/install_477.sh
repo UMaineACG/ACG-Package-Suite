@@ -49,10 +49,8 @@ sudo apt-get install -y avr-libc
 
 sudo apt autoremove
 
-/usr/local/bin/ACG-Package-Suite/ubuntu/install_usbip.sh
-/usr/local/bin/ACG-Package-Suite/ubuntu/install_seafile.sh
+# /usr/local/bin/ACG-Package-Suite/ubuntu/install_usbip.sh
 /usr/local/bin/ACG-Package-Suite/ubuntu/install_chrome_and_remote_desktop.sh
-sudo apt-get install -y firmware-b43-installer
 sudo apt-get install -y dfu-programmer
 
 
