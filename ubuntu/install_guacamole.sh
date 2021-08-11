@@ -21,11 +21,11 @@ echo
         echo "Passwords don't match. Please try again."
         echo
     done
-    echo
-    read -s -p "Enter FQDN for SSL Certificate Generation (leave blank to use public IP): " FQDN
-    echo
+#    echo
+#    read -s -p "Enter FQDN for SSL Certificate Generation (leave blank to use public IP): " FQDN
+#    echo
 
-sudo apt-get -y install docker.io mysql-client wget
+sudo apt-get -y install docker mysql-client wget
 mkdir /tmp/guacamole
 cd /tmp/guacamole
 # sudo ufw disable
@@ -41,68 +41,10 @@ sudo ./docker-install.sh -m "$mysqlrootpassword" -g "$guacdbuserpassword"
 # Setup nginx with a self signed certificate #
 ##############################################
 # create the nginx configuration directory structure in the local users home config directory
-CONFIG_DIR=$HOME/.config/ACG/nginx
-# make the directory and sub-directories if necessary
-if [ ! -d $CONFIG_DIR/certs ]
-then
-	mkdir -p $CONFIG_DIR/certs
-fi
-
-# configure nginx with https as a reverse proxy and make guacamole available at the base address and /guacamole
-NGINX_CONFIG='server {
-	listen 80 default_server;
-	server_name _;
-	return 301 https://$host$request_uri;
-}
-
-server {
-
-	listen 443 ssl default_server;
-	listen [::]:443 ssl default_server;
-
-	ssl_certificate /etc/nginx/conf.d/certs/server.crt;
-	ssl_certificate_key /etc/nginx/conf.d/certs/server.key;
-
-	location /guacamole {
-		proxy_pass http://guacamole:8080/guacamole/;
-		proxy_buffering off;
-		proxy_http_version 1.1;
-		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-		proxy_set_header Upgrade $http_upgrade;
-		proxy_set_header Connection $http_connection;
-		access_log off;
-	}
-
-	location / {
-		proxy_pass http://guacamole:8080/guacamole/;
-		proxy_buffering off;
-		proxy_http_version 1.1;
-		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-		proxy_set_header Upgrade $http_upgrade;
-		proxy_set_header Connection $http_connection;
-		proxy_cookie_path /guacamole/ /;
-		access_log off;
-	}
-
-}'
-
-echo -e "$NGINX_CONFIG" > $CONFIG_DIR/default.conf
-
-if [ -z "$FQDN" ]
-then
-	# find the external IP address to generate the 1 year self signed SSL cert and place it in the configuration directory structure
-	FQDN=$(wget http://ipinfo.io/ip -qO -); 
-fi
-
-openssl req -newkey rsa:2048 -nodes -keyout $CONFIG_DIR/certs/server.key -x509 -days 365 -out $CONFIG_DIR/certs/server.crt -subj "/C=US/ST=ME/L=Orono/O=Univserity of Maine System/OU=Advanced Computing Group/CN=$FQDN"
-
-# start up the nginx container with 
-#    ports 80 and 443 bound to the host ports
-#    mounted with the configuration directory created above
-#    linked to the guacamole container
-sudo docker run --restart=always --name nginx-ssl -p 80:80 -p 443:443 -v $CONFIG_DIR:/etc/nginx/conf.d  --link guacamole:guacamole -d nginx
-
-sudo systemctl enable --now docker.service
+#CONFIG_DIR=$HOME/.config/ACG/nginx
+DOCKER_COMPOSE_CONFIG_DIR=/opt/ACG/letsencrypt
+CONFIG_DIR=$DOCKER_COMPOSE_CONFIG_DIR/nginx/nginx/site-confs
+DOCKER_COMPOSE_FILE=$DOCKER_COMPOSE_CONFIG_DIR/docker-compose.yml
 
 # add a connection to this machine
 SQLCODE="
@@ -114,6 +56,45 @@ replace into guacamole_connection_parameter(connection_id,parameter_name,paramet
 # Execute SQL Code
 echo $SQLCODE | mysql -h 127.0.0.1 -P 3306 -u root -p$mysqlrootpassword
 
+# configure nginx with https as a reverse proxy and make guacamole available at the base address and /guacamole
+REPLACESTR='location \/guacamole {
+        proxy_pass http:\/\/guacamole:8080\/guacamole\/;
+        proxy_buffering off;
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection \$http_connection;
+        access_log off;
+    }
+
+    location \/ {
+        proxy_pass http:\/\/guacamole:8080\/guacamole\/;
+        proxy_buffering off;
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection \$http_connection;
+        proxy_cookie_path \/guacamole\/ \/;
+        access_log off;
+    }'
+
+# install letsencrypt and nginx in a docker container
+/usr/local/bin/ACG-Package-Suite/ubuntu/install_letsencrypt.sh
+
+# stop the container to change the configuration
+sudo docker-compose -f $DOCKER_COMPOSE_FILE down
+
+# add the guacamole location sections
+perl -0777 -pi -e "s#location / {.*?}#$REPLACESTR#s" $CONFIG_DIR/default
+
+# Use the same network as the other containers and link to guacamole
+REPLACESTR='    external_links:
+      - guacamole:guacamole
+    network_mode: bridge'
+echo "$REPLACESTR" >> $DOCKER_COMPOSE_FILE
+
+# restart the container with the new configuration
+sudo docker-compose -f $DOCKER_COMPOSE_FILE up -d
 
 echo
 echo
@@ -127,11 +108,6 @@ echo "please log in with the default credentials"
 echo "guacadmin guacadmin"
 echo "and change the password"
 echo "feel free to add a user account for yourself as well"
-echo
-echo "Guacamole is currently installed with a self-signed"
-echo "SSL certificate and browsers will show the connection"
-echo "as being insecure. If you need a valid certificate/FQDN"
-echo "please reach out to us at acg@maine.edu."
 echo
 echo "CLOSE THE BROWSER WHEN DONE"
 read -rsp $'Press any key to continue...\n' -n1 key
