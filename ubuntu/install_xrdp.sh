@@ -13,7 +13,7 @@ mkdir /tmp/installxrdp
 cd /tmp/installxrdp
 
 
-curl http://www.c-nergy.be/downloads/xRDP-installer-1.4.2.zip --output xrdp.zip
+curl http://www.c-nergy.be/downloads/xRDP/xrdp-installer-1.4.2.zip --output xrdp.zip
 unzip xrdp.zip 
 chmod +x xrdp-installer-1.4.2.sh 
 sed -i 's/be.archive/us.archive/' xrdp-installer-1.4.2.sh
