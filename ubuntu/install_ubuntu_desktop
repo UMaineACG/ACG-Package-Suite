@@ -15,6 +15,9 @@ sudo timedatectl set-timezone America/New_York
 sudo apt-get -y  update
 sudo apt-get -y  upgrade 
 sudo apt  -y autoremove
+sudo apt-get -y install linux-generic
+sudo apt-get update
+sudo apt -y autoremove
 
 sudo apt-get  -y install
 sudo apt-get install -y  -f ubuntu-desktop
@@ -29,3 +32,4 @@ echo PATH=\"$PATH\"| sudo tee /etc/environment
 /usr/local/bin/ACG-Package-Suite/ubuntu/install_chrome_and_remote_desktop.sh
 /usr/local/bin/ACG-Package-Suite/ubuntu/fix_online_accounts_2004.sh
 
+sudo apt-get install -y firefox
