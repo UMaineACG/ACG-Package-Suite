@@ -40,7 +40,7 @@ sudo ./docker-install.sh -m "$mysqlrootpassword" -g "$guacdbuserpassword"
 ##############################################
 # Setup nginx with a self signed certificate #
 ##############################################
-# create the nginx configuration directory structure in the local users home config directory
+# create the nginx configuration directory structure in the /opt/ACG directory
 #CONFIG_DIR=$HOME/.config/ACG/nginx
 DOCKER_COMPOSE_CONFIG_DIR=/opt/ACG/letsencrypt
 CONFIG_DIR=$DOCKER_COMPOSE_CONFIG_DIR/nginx/nginx/site-confs
@@ -85,7 +85,7 @@ REPLACESTR='location \/guacamole {
 sudo docker-compose -f $DOCKER_COMPOSE_FILE down
 
 # add the guacamole location sections
-perl -0777 -pi -e "s#location / {.*?}#$REPLACESTR#s" $CONFIG_DIR/default
+perl -0777 -pi -e "s#location / {.*?}#$REPLACESTR#s" $CONFIG_DIR/default.conf
 
 # Use the same network as the other containers and link to guacamole
 REPLACESTR='    external_links:
