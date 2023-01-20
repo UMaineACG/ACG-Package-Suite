@@ -31,8 +31,8 @@ cd /tmp/guacamole
 # sudo ufw disable
 wget https://raw.githubusercontent.com/MysticRyuujin/guac-install/master/docker-install.sh
 chmod +x docker-install.sh
-sed -i 's/sleep 30/sleep 90/' docker-install.sh
-sed -i 's/Waiting 30/Waiting 90/' docker-install.sh
+#sed -i 's/sleep 30/sleep 90/' docker-install.sh
+#sed -i 's/Waiting 30/Waiting 90/' docker-install.sh
 sed -i 's%guacamole/guacd%-v /tmp:/home guacamole/guacd%' docker-install.sh
 
 sudo ./docker-install.sh -m "$mysqlrootpassword" -g "$guacdbuserpassword" 
@@ -81,11 +81,18 @@ REPLACESTR='location \/guacamole {
 # install letsencrypt and nginx in a docker container
 /usr/local/bin/ACG-Package-Suite/ubuntu/install_letsencrypt.sh
 
+# wait for the letsencrypt container to create the necessary files
+echo "Waiting for letsencrypt container to be ready"
+while [ ! -f $CONFIG_DIR/default.conf ]
+do
+       sleep 1
+done
+
 # stop the container to change the configuration
 sudo docker-compose -f $DOCKER_COMPOSE_FILE down
 
 # add the guacamole location sections
-perl -0777 -pi -e "s#location / {.*?}#$REPLACESTR#s" $CONFIG_DIR/default.conf
+perl -0777 -pi -e "s#location / {\s+\# enable.*?}#$REPLACESTR#s" $CONFIG_DIR/default.conf
 
 # Use the same network as the other containers and link to guacamole
 REPLACESTR='    external_links:
