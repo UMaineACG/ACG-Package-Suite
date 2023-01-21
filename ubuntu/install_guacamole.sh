@@ -58,7 +58,7 @@ echo $SQLCODE | mysql -h 127.0.0.1 -P 3306 -u root -p$mysqlrootpassword
 
 # configure nginx with https as a reverse proxy and make guacamole available at the base address and /guacamole
 REPLACESTR='location \/guacamole {
-        proxy_pass http:\/\/guacamole:8080\/guacamole\/;
+        proxy_pass http:\/\/guacamole:8080\/guacamole;
         proxy_buffering off;
         proxy_http_version 1.1;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
@@ -68,7 +68,7 @@ REPLACESTR='location \/guacamole {
     }
 
     location \/ {
-        proxy_pass http:\/\/guacamole:8080\/guacamole\/;
+        proxy_pass http:\/\/guacamole:8080\/guacamole;
         proxy_buffering off;
         proxy_http_version 1.1;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
